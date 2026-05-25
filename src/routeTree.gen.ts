@@ -10,11 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ChatRouteImport } from './routes/chat'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminCampaignIdIndexRouteImport } from './routes/admin/$campaignId/index'
+import { Route as AdminCampaignIdNodesRouteImport } from './routes/admin/$campaignId/nodes'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatRoute = ChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,31 +31,81 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCampaignIdIndexRoute = AdminCampaignIdIndexRouteImport.update({
+  id: '/admin/$campaignId/',
+  path: '/admin/$campaignId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCampaignIdNodesRoute = AdminCampaignIdNodesRouteImport.update({
+  id: '/admin/$campaignId/nodes',
+  path: '/admin/$campaignId/nodes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/chat': typeof ChatRoute
   '/login': typeof LoginRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/$campaignId/nodes': typeof AdminCampaignIdNodesRoute
+  '/admin/$campaignId/': typeof AdminCampaignIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/chat': typeof ChatRoute
   '/login': typeof LoginRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/$campaignId/nodes': typeof AdminCampaignIdNodesRoute
+  '/admin/$campaignId': typeof AdminCampaignIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/chat': typeof ChatRoute
   '/login': typeof LoginRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/$campaignId/nodes': typeof AdminCampaignIdNodesRoute
+  '/admin/$campaignId/': typeof AdminCampaignIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths:
+    | '/'
+    | '/chat'
+    | '/login'
+    | '/admin/'
+    | '/admin/$campaignId/nodes'
+    | '/admin/$campaignId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/' | '/login'
+  to:
+    | '/'
+    | '/chat'
+    | '/login'
+    | '/admin'
+    | '/admin/$campaignId/nodes'
+    | '/admin/$campaignId'
+  id:
+    | '__root__'
+    | '/'
+    | '/chat'
+    | '/login'
+    | '/admin/'
+    | '/admin/$campaignId/nodes'
+    | '/admin/$campaignId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ChatRoute: typeof ChatRoute
   LoginRoute: typeof LoginRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminCampaignIdNodesRoute: typeof AdminCampaignIdNodesRoute
+  AdminCampaignIdIndexRoute: typeof AdminCampaignIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +117,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,12 +131,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/$campaignId/': {
+      id: '/admin/$campaignId/'
+      path: '/admin/$campaignId'
+      fullPath: '/admin/$campaignId/'
+      preLoaderRoute: typeof AdminCampaignIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/$campaignId/nodes': {
+      id: '/admin/$campaignId/nodes'
+      path: '/admin/$campaignId/nodes'
+      fullPath: '/admin/$campaignId/nodes'
+      preLoaderRoute: typeof AdminCampaignIdNodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ChatRoute: ChatRoute,
   LoginRoute: LoginRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminCampaignIdNodesRoute: AdminCampaignIdNodesRoute,
+  AdminCampaignIdIndexRoute: AdminCampaignIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

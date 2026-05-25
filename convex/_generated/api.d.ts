@@ -8,7 +8,14 @@
  * @module
  */
 
+import type * as campaigns from "../campaigns.js";
+import type * as characters from "../characters.js";
 import type * as chat from "../chat.js";
+import type * as decisionNodes from "../decisionNodes.js";
+import type * as factions from "../factions.js";
+import type * as locations from "../locations.js";
+import type * as messages from "../messages.js";
+import type * as notes from "../notes.js";
 import type * as users from "../users.js";
 
 import type {
@@ -18,7 +25,14 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  campaigns: typeof campaigns;
+  characters: typeof characters;
   chat: typeof chat;
+  decisionNodes: typeof decisionNodes;
+  factions: typeof factions;
+  locations: typeof locations;
+  messages: typeof messages;
+  notes: typeof notes;
   users: typeof users;
 }>;
 
