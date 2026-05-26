@@ -8,6 +8,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
+import { useAuth } from "#/components/auth/auth-provider";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -34,7 +35,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			},
 			{
 				rel: "stylesheet",
-				href: "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css",
+				href: "https://unpkg.com/@knadh/oat/oat.min.css",
 			},
 		],
 	}),
@@ -42,12 +43,19 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+	const { clearSelectedCharacter, selectedCharacterId } = useAuth();
 	return (
 		<html lang="en">
 			<head>
 				<HeadContent />
 			</head>
 			<body>
+				<nav>
+					<button type="button" onClick={clearSelectedCharacter}>
+						Logout
+					</button>
+					<span>{selectedCharacterId}</span>
+				</nav>
 				{children}
 				<TanStackDevtools
 					config={{

@@ -1,14 +1,14 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { Authenticated } from "#/components/auth/autheticated";
 
-export const Route = createFileRoute("/campaign/layout")({
+export const Route = createFileRoute("/admin")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	return (
-		<div>
-			<h1>Campaign</h1>
+		<Authenticated>
 			<Outlet />
-		</div>
+		</Authenticated>
 	);
 }
