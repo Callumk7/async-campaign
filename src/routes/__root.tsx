@@ -47,14 +47,19 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<nav className="flex bg-amber-800 p-3 gap-3">
+				<nav className="flex flex-wrap items-center gap-3 bg-slate-900 p-3 text-white">
+					<Link to="/">Home</Link>
+					<Link to="/campaigns">Campaigns</Link>
+					<Link to="/users">Users</Link>
+					<span className="ml-auto text-sm text-slate-300">
+						{selectedUser?.name ??
+							(isAuthenticated ? "User selected" : "Guest")}
+					</span>
 					{isAuthenticated && (
 						<button type="button" onClick={clearSelectedUser}>
 							Logout
 						</button>
 					)}
-					<span>{selectedUser?.name}</span>
-					<Link to="/campaigns">Campaigns</Link>
 				</nav>
 				{children}
 				<TanStackDevtools

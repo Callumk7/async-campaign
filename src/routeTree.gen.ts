@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UsersRouteImport } from './routes/users'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CampaignsIndexRouteImport } from './routes/campaigns/index'
 import { Route as CampaignsNewRouteImport } from './routes/campaigns/new'
 import { Route as CampaignsCampaignIdRouteRouteImport } from './routes/campaigns/$campaignId/route'
 
+const UsersRoute = UsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -45,6 +51,7 @@ const CampaignsCampaignIdRouteRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/users': typeof UsersRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRoute
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns/': typeof CampaignsIndexRoute
@@ -52,6 +59,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/users': typeof UsersRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRoute
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns': typeof CampaignsIndexRoute
@@ -60,6 +68,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/users': typeof UsersRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRoute
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns/': typeof CampaignsIndexRoute
@@ -69,6 +78,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/users'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/campaigns/'
@@ -76,6 +86,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/users'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/campaigns'
@@ -83,6 +94,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/login'
+    | '/users'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/campaigns/'
@@ -91,6 +103,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  UsersRoute: typeof UsersRoute
   CampaignsCampaignIdRouteRoute: typeof CampaignsCampaignIdRouteRoute
   CampaignsNewRoute: typeof CampaignsNewRoute
   CampaignsIndexRoute: typeof CampaignsIndexRoute
@@ -98,6 +111,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/users': {
+      id: '/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof UsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -139,6 +159,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  UsersRoute: UsersRoute,
   CampaignsCampaignIdRouteRoute: CampaignsCampaignIdRouteRoute,
   CampaignsNewRoute: CampaignsNewRoute,
   CampaignsIndexRoute: CampaignsIndexRoute,
