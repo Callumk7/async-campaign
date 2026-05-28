@@ -6,9 +6,10 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { useAuth } from "#/components/auth/auth-provider";
+import { Link } from "#/components/ui/link";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
-import { useAuth } from "#/components/auth/auth-provider";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -33,28 +34,25 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				rel: "stylesheet",
 				href: appCss,
 			},
-			{
-				rel: "stylesheet",
-				href: "https://unpkg.com/@knadh/oat/oat.min.css",
-			},
 		],
 	}),
 	shellComponent: RootDocument,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	const { clearSelectedCharacter, selectedCharacterId } = useAuth();
+	const { clearSelectedCharacter, selectedCharacter } = useAuth();
 	return (
 		<html lang="en">
 			<head>
 				<HeadContent />
 			</head>
 			<body>
-				<nav>
+				<nav className="flex bg-amber-800 p-3 gap-3">
 					<button type="button" onClick={clearSelectedCharacter}>
 						Logout
 					</button>
-					<span>{selectedCharacterId}</span>
+					<span>{selectedCharacter?.name}</span>
+					<Link to="/campaign">Campaigns</Link>
 				</nav>
 				{children}
 				<TanStackDevtools

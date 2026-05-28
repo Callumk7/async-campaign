@@ -1,6 +1,10 @@
 import { useConvexMutation } from "@convex-dev/react-query";
 import { useMutation } from "@tanstack/react-query";
 import * as React from "react";
+import { Button } from "#/components/ui/button";
+import { Field, Form, Label } from "#/components/ui/form";
+import { Input } from "#/components/ui/input";
+import { Textarea } from "#/components/ui/textarea";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 
@@ -27,24 +31,25 @@ export function CreateNode({ campaignId }: CreateNodeProps) {
 
 	return (
 		<div>
-			<form onSubmit={handleCreateNode}>
-				<label>
-					Name:
-					<input
-						type="text"
+			<Form onSubmit={handleCreateNode}>
+				<Field>
+					<Label htmlFor="node-name">Name</Label>
+					<Input
+						id="node-name"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
 					/>
-				</label>
-				<label>
-					Content:
-					<textarea
+				</Field>
+				<Field>
+					<Label htmlFor="node-content">Content</Label>
+					<Textarea
+						id="node-content"
 						value={content}
 						onChange={(e) => setContent(e.target.value)}
 					/>
-				</label>
-				<button type="submit">Create Node</button>
-			</form>
+				</Field>
+				<Button type="submit">Create Node</Button>
+			</Form>
 		</div>
 	);
 }
