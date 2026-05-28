@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
-export const Route = createFileRoute("/campaign/$campaignId")({
+export const Route = createFileRoute("/campaigns/$campaignId")({
 	component: RouteComponent,
 	loader: async ({ context, params }) => {
 		await context.queryClient.ensureQueryData(

@@ -40,7 +40,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	const { clearSelectedCharacter, selectedCharacter } = useAuth();
+	const { clearSelectedUser, selectedUser, isAuthenticated } = useAuth();
 	return (
 		<html lang="en">
 			<head>
@@ -48,11 +48,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				<nav className="flex bg-amber-800 p-3 gap-3">
-					<button type="button" onClick={clearSelectedCharacter}>
-						Logout
-					</button>
-					<span>{selectedCharacter?.name}</span>
-					<Link to="/campaign">Campaigns</Link>
+					{isAuthenticated && (
+						<button type="button" onClick={clearSelectedUser}>
+							Logout
+						</button>
+					)}
+					<span>{selectedUser?.name}</span>
+					<Link to="/campaigns">Campaigns</Link>
 				</nav>
 				{children}
 				<TanStackDevtools

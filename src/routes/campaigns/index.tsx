@@ -5,7 +5,7 @@ import { Authenticated } from "#/components/auth/autheticated";
 import { Link } from "#/components/ui/link";
 import { api } from "../../../convex/_generated/api";
 
-export const Route = createFileRoute("/campaign/")({
+export const Route = createFileRoute("/campaigns/")({
 	component: RouteComponent,
 	loader: async ({ context }) => {
 		await context.queryClient.ensureQueryData(
@@ -18,17 +18,18 @@ function RouteComponent() {
 	const { data } = useSuspenseQuery(convexQuery(api.campaigns.getCampaigns));
 	return (
 		<Authenticated>
-			<div>
+			<div className="flex flex-col gap-4 p-4">
 				<h1>Campaigns</h1>
 				{data?.map((campaign) => (
 					<Link
-						to="/campaign/$campaignId"
+						to="/campaigns/$campaignId"
 						params={{ campaignId: campaign._id }}
 						key={campaign._id}
 					>
 						{campaign.name}
 					</Link>
 				))}
+				<Link to="/campaigns/new">Create new campaign</Link>
 			</div>
 		</Authenticated>
 	);

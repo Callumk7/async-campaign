@@ -11,41 +11,39 @@ export const Route = createFileRoute("/login")({
 
 function RouteComponent() {
 	const navigate = useNavigate();
-	const { selectCharacter } = useAuth();
-	const createCharacter = useMutation({
-		mutationFn: useConvexMutation(api.characters.createCharacter),
+	const { selectUser } = useAuth();
+	const createUser = useMutation({
+		mutationFn: useConvexMutation(api.users.createUser),
 	});
-	const charactersQuery = useQuery(
-		convexQuery(api.characters.getCharacters, {}),
-	);
+	const usersQuery = useQuery(convexQuery(api.users.getUsers, {}));
 	const [name, setName] = React.useState("");
 
 	return (
 		<main className="mx-auto flex max-w-2xl flex-col gap-6 p-8">
-			<h1 className="text-3xl font-bold">Choose your character</h1>
+			<h1 className="text-3xl font-bold">Choose your user</h1>
 
 			<section className="flex flex-col gap-3 rounded border p-4">
-				<h2 className="text-xl font-semibold">Existing characters</h2>
-				{charactersQuery.isLoading && <p>Loading characters...</p>}
-				{charactersQuery.data?.length === 0 && <p>No characters yet.</p>}
+				<h2 className="text-xl font-semibold">Existing users</h2>
+				{usersQuery.isLoading && <p>Loading users...</p>}
+				{usersQuery.data?.length === 0 && <p>No users yet.</p>}
 				<div className="flex flex-col gap-2">
-					{charactersQuery.data?.map((character) => (
+					{usersQuery.data?.map((user) => (
 						<button
-							key={character._id}
+							key={user._id}
 							type="button"
 							onClick={() => {
-								selectCharacter(character);
+								selectUser(user);
 								void navigate({ to: "/" });
 							}}
 						>
-							{character.name}
+							{user.name}
 						</button>
 					))}
 				</div>
 			</section>
 
 			<section className="flex flex-col gap-3 rounded border p-4">
-				<h2 className="text-xl font-semibold">Create a character</h2>
+				<h2 className="text-xl font-semibold">Create a user</h2>
 				<form
 					className="flex gap-2"
 					onSubmit={async (event) => {
@@ -53,29 +51,31 @@ function RouteComponent() {
 						const trimmedName = name.trim();
 						if (!trimmedName) return;
 
-						const characterId = await createCharacter.mutateAsync({
+						const userId = await createUser.mutateAsync({
 							name: trimmedName,
 						});
-						selectCharacter({
-							_id: characterId,
+						selectUser({
+							_id: userId,
 							_creationTime: Date.now(),
 							name: trimmedName,
+							role: "player",
+							updatedAt: Date.now(),
 						});
 						setName("");
 						void navigate({ to: "/" });
 					}}
 				>
 					<input
-						aria-label="Character name"
-						placeholder="Character name"
+						aria-label="User name"
+						placeholder="User name"
 						value={name}
 						onChange={(event) => setName(event.target.value)}
 					/>
-					<button type="submit" disabled={createCharacter.isPending}>
-						Create character
+					<button type="submit" disabled={createUser.isPending}>
+						Create user
 					</button>
 				</form>
-				{createCharacter.isPending && <p>Creating character...</p>}
+				{createUser.isPending && <p>Creating user...</p>}
 			</section>
 		</main>
 	);

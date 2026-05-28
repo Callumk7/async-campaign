@@ -1,14 +1,14 @@
 import * as React from "react";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 
-const SELECTED_CHARACTER_STORAGE_KEY = "async-campaign:selected-character-id";
+const SELECTED_USER_STORAGE_KEY = "async-campaign:selected-user-id";
 
 type AuthContextValue = {
-	selectedCharacterId: Id<"characters"> | null;
-	selectedCharacter: Doc<"characters"> | null;
+	selectedUserId: Id<"users"> | null;
+	selectedUser: Doc<"users"> | null;
 	isAuthenticated: boolean;
-	selectCharacter: (character: Doc<"characters">) => void;
-	clearSelectedCharacter: () => void;
+	selectUser: (user: Doc<"users">) => void;
+	clearSelectedUser: () => void;
 };
 
 const AuthContext = React.createContext<AuthContextValue | null>(null);
@@ -18,50 +18,43 @@ type AuthProviderProps = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-	const [selectedCharacter, setSelectedCharacter] =
-		React.useState<Doc<"characters"> | null>(null);
+	const [selectedUser, setSelectedUser] = React.useState<Doc<"users"> | null>(
+		null,
+	);
 
-	const [selectedCharacterId, setSelectedCharacterId] =
-		React.useState<Id<"characters"> | null>(() => {
+	const [selectedUserId, setSelectedUserId] =
+		React.useState<Id<"users"> | null>(() => {
 			if (typeof window === "undefined") return null;
 			return window.localStorage.getItem(
-				SELECTED_CHARACTER_STORAGE_KEY,
-			) as Id<"characters"> | null;
+				SELECTED_USER_STORAGE_KEY,
+			) as Id<"users"> | null;
 		});
 
-	const selectCharacter = React.useCallback((character: Doc<"characters">) => {
-		setSelectedCharacter(character);
-		setSelectedCharacterId(character._id);
+	const selectUser = React.useCallback((user: Doc<"users">) => {
+		setSelectedUser(user);
+		setSelectedUserId(user._id);
 		if (typeof window !== "undefined") {
-			window.localStorage.setItem(
-				SELECTED_CHARACTER_STORAGE_KEY,
-				character._id,
-			);
+			window.localStorage.setItem(SELECTED_USER_STORAGE_KEY, user._id);
 		}
 	}, []);
 
-	const clearSelectedCharacter = React.useCallback(() => {
-		setSelectedCharacter(null);
-		setSelectedCharacterId(null);
+	const clearSelectedUser = React.useCallback(() => {
+		setSelectedUser(null);
+		setSelectedUserId(null);
 		if (typeof window !== "undefined") {
-			window.localStorage.removeItem(SELECTED_CHARACTER_STORAGE_KEY);
+			window.localStorage.removeItem(SELECTED_USER_STORAGE_KEY);
 		}
 	}, []);
 
 	const value = React.useMemo<AuthContextValue>(
 		() => ({
-			selectedCharacterId,
-			selectedCharacter,
-			isAuthenticated: selectedCharacterId !== null,
-			selectCharacter,
-			clearSelectedCharacter,
+			selectedUserId,
+			selectedUser,
+			isAuthenticated: selectedUserId !== null,
+			selectUser,
+			clearSelectedUser,
 		}),
-		[
-			selectedCharacterId,
-			selectedCharacter,
-			selectCharacter,
-			clearSelectedCharacter,
-		],
+		[selectedUserId, selectedUser, selectUser, clearSelectedUser],
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -75,15 +68,12 @@ export function useAuth() {
 	return context;
 }
 
-type RequireCharacterProps = {
+type RequireUserProps = {
 	children: React.ReactNode;
 	fallback: React.ReactNode;
 };
 
-export function RequireCharacter({
-	children,
-	fallback,
-}: RequireCharacterProps) {
+export function RequireUser({ children, fallback }: RequireUserProps) {
 	const { isAuthenticated } = useAuth();
 	return isAuthenticated ? children : fallback;
 }
