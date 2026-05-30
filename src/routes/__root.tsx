@@ -53,7 +53,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					<Link to="/users">Users</Link>
 					<span className="ml-auto text-sm text-slate-300">
 						{selectedUser?.name ??
-							(isAuthenticated ? "User selected" : "Guest")}
+							(isAuthenticated ? "Loading user..." : "Guest")}
 					</span>
 					{isAuthenticated && (
 						<button type="button" onClick={clearSelectedUser}>

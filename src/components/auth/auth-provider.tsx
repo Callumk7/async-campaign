@@ -1,4 +1,7 @@
+import { convexQuery } from "@convex-dev/react-query";
+import { useQuery } from "@tanstack/react-query";
 import * as React from "react";
+import { api } from "../../../convex/_generated/api";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 
 const SELECTED_USER_STORAGE_KEY = "async-campaign:selected-user-id";
@@ -18,9 +21,8 @@ type AuthProviderProps = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-	const [selectedUser, setSelectedUser] = React.useState<Doc<"users"> | null>(
-		null,
-	);
+	const [selectedUserSnapshot, setSelectedUserSnapshot] =
+		React.useState<Doc<"users"> | null>(null);
 
 	const [selectedUserId, setSelectedUserId] =
 		React.useState<Id<"users"> | null>(() => {
@@ -30,8 +32,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
 			) as Id<"users"> | null;
 		});
 
+	const selectedUserQuery = useQuery(
+		convexQuery(
+			api.users.getUser,
+			selectedUserId ? { id: selectedUserId } : "skip",
+		),
+	);
+
+	const selectedUser = selectedUserId
+		? selectedUserQuery.data === undefined
+			? selectedUserSnapshot
+			: selectedUserQuery.data
+		: null;
+
 	const selectUser = React.useCallback((user: Doc<"users">) => {
-		setSelectedUser(user);
+		setSelectedUserSnapshot(user);
 		setSelectedUserId(user._id);
 		if (typeof window !== "undefined") {
 			window.localStorage.setItem(SELECTED_USER_STORAGE_KEY, user._id);
@@ -39,12 +54,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
 	}, []);
 
 	const clearSelectedUser = React.useCallback(() => {
-		setSelectedUser(null);
+		setSelectedUserSnapshot(null);
 		setSelectedUserId(null);
 		if (typeof window !== "undefined") {
 			window.localStorage.removeItem(SELECTED_USER_STORAGE_KEY);
 		}
 	}, []);
+
+	React.useEffect(() => {
+		if (selectedUserId && selectedUserQuery.data === null) {
+			clearSelectedUser();
+		}
+	}, [selectedUserId, selectedUserQuery.data, clearSelectedUser]);
 
 	const value = React.useMemo<AuthContextValue>(
 		() => ({

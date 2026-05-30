@@ -11,10 +11,11 @@ import { Button } from "#/components/ui/button";
 import { Field, Form, Label } from "#/components/ui/form";
 import { Input } from "#/components/ui/input";
 import { Select } from "#/components/ui/select";
-import { api } from "../../convex/_generated/api";
-import type { Id } from "../../convex/_generated/dataModel";
+import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
+import { Link } from "#/components/ui/link";
 
-export const Route = createFileRoute("/users")({
+export const Route = createFileRoute("/users/")({
 	component: RouteComponent,
 	loader: async ({ context }) => {
 		await context.queryClient.ensureQueryData(
@@ -132,6 +133,12 @@ function RouteComponent() {
 									</p>
 								</div>
 								<div className="flex gap-2">
+									<Link
+										to="/users/$userId/characters"
+										params={{ userId: user._id }}
+									>
+										Characters
+									</Link>
 									<button
 										type="button"
 										className="text-sm text-blue-600 hover:underline"

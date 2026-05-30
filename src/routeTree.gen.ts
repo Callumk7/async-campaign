@@ -9,27 +9,34 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UsersRouteImport } from './routes/users'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as UsersRouteRouteImport } from './routes/users/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UsersIndexRouteImport } from './routes/users/index'
 import { Route as CampaignsIndexRouteImport } from './routes/campaigns/index'
 import { Route as CampaignsNewRouteImport } from './routes/campaigns/new'
 import { Route as CampaignsCampaignIdRouteRouteImport } from './routes/campaigns/$campaignId/route'
+import { Route as UsersUserIdCharactersRouteImport } from './routes/users/$userId.characters'
 
-const UsersRoute = UsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UsersRouteRoute = UsersRouteRouteImport.update({
+  id: '/users',
+  path: '/users',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const UsersIndexRoute = UsersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UsersRouteRoute,
 } as any)
 const CampaignsIndexRoute = CampaignsIndexRouteImport.update({
   id: '/campaigns/',
@@ -47,63 +54,78 @@ const CampaignsCampaignIdRouteRoute =
     path: '/campaigns/$campaignId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const UsersUserIdCharactersRoute = UsersUserIdCharactersRouteImport.update({
+  id: '/$userId/characters',
+  path: '/$userId/characters',
+  getParentRoute: () => UsersRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/users': typeof UsersRouteRouteWithChildren
   '/login': typeof LoginRoute
-  '/users': typeof UsersRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRoute
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns/': typeof CampaignsIndexRoute
+  '/users/': typeof UsersIndexRoute
+  '/users/$userId/characters': typeof UsersUserIdCharactersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/users': typeof UsersRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRoute
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns': typeof CampaignsIndexRoute
+  '/users': typeof UsersIndexRoute
+  '/users/$userId/characters': typeof UsersUserIdCharactersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/users': typeof UsersRouteRouteWithChildren
   '/login': typeof LoginRoute
-  '/users': typeof UsersRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRoute
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns/': typeof CampaignsIndexRoute
+  '/users/': typeof UsersIndexRoute
+  '/users/$userId/characters': typeof UsersUserIdCharactersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/login'
     | '/users'
+    | '/login'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/campaigns/'
+    | '/users/'
+    | '/users/$userId/characters'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
-    | '/users'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/campaigns'
+    | '/users'
+    | '/users/$userId/characters'
   id:
     | '__root__'
     | '/'
-    | '/login'
     | '/users'
+    | '/login'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/campaigns/'
+    | '/users/'
+    | '/users/$userId/characters'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  UsersRouteRoute: typeof UsersRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
-  UsersRoute: typeof UsersRoute
   CampaignsCampaignIdRouteRoute: typeof CampaignsCampaignIdRouteRoute
   CampaignsNewRoute: typeof CampaignsNewRoute
   CampaignsIndexRoute: typeof CampaignsIndexRoute
@@ -111,18 +133,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/users': {
-      id: '/users'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof UsersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/users': {
+      id: '/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof UsersRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -131,6 +153,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/users/': {
+      id: '/users/'
+      path: '/'
+      fullPath: '/users/'
+      preLoaderRoute: typeof UsersIndexRouteImport
+      parentRoute: typeof UsersRouteRoute
     }
     '/campaigns/': {
       id: '/campaigns/'
@@ -153,13 +182,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignsCampaignIdRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/users/$userId/characters': {
+      id: '/users/$userId/characters'
+      path: '/$userId/characters'
+      fullPath: '/users/$userId/characters'
+      preLoaderRoute: typeof UsersUserIdCharactersRouteImport
+      parentRoute: typeof UsersRouteRoute
+    }
   }
 }
 
+interface UsersRouteRouteChildren {
+  UsersIndexRoute: typeof UsersIndexRoute
+  UsersUserIdCharactersRoute: typeof UsersUserIdCharactersRoute
+}
+
+const UsersRouteRouteChildren: UsersRouteRouteChildren = {
+  UsersIndexRoute: UsersIndexRoute,
+  UsersUserIdCharactersRoute: UsersUserIdCharactersRoute,
+}
+
+const UsersRouteRouteWithChildren = UsersRouteRoute._addFileChildren(
+  UsersRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  UsersRouteRoute: UsersRouteRouteWithChildren,
   LoginRoute: LoginRoute,
-  UsersRoute: UsersRoute,
   CampaignsCampaignIdRouteRoute: CampaignsCampaignIdRouteRoute,
   CampaignsNewRoute: CampaignsNewRoute,
   CampaignsIndexRoute: CampaignsIndexRoute,
