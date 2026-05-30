@@ -91,6 +91,64 @@ export const createCampaignMember = mutation({
 	},
 });
 
+export const addCharacterToCampaign = mutation({
+	args: {
+		campaignId: v.id("campaigns"),
+		characterId: v.id("characters"),
+		userId: v.id("users"),
+		role: v.optional(campaignRole),
+	},
+	handler: async (ctx, args) => {
+		const [campaign, character] = await Promise.all([
+			ctx.db.get(args.campaignId),
+			ctx.db.get(args.characterId),
+		]);
+
+		if (!campaign) {
+			throw new Error("Campaign not found.");
+		}
+
+		if (!character) {
+			throw new Error("Character not found.");
+		}
+
+		if (character.playerId !== args.userId) {
+			throw new Error("Cannot add another user's character to a campaign.");
+		}
+
+		const existingMembership = await ctx.db
+			.query("campaignMembers")
+			.withIndex("by_campaignId_and_characterId", (q) =>
+				q.eq("campaignId", args.campaignId).eq("characterId", args.characterId),
+			)
+			.unique();
+
+		const membershipId =
+			existingMembership?._id ??
+			(await ctx.db.insert("campaignMembers", {
+				campaignId: args.campaignId,
+				characterId: args.characterId,
+				userId: args.userId,
+				role: args.role ?? "player",
+				joinedAt: Date.now(),
+			}));
+
+		if (character.campaignId !== args.campaignId) {
+			await ctx.db.patch(args.characterId, {
+				campaignId: args.campaignId,
+				updatedAt: Date.now(),
+			});
+		}
+
+		const updatedCharacter = await ctx.db.get(args.characterId);
+		if (!updatedCharacter) {
+			throw new Error("Character not found after campaign update.");
+		}
+
+		return { membershipId, character: updatedCharacter };
+	},
+});
+
 export const updateCampaignMember = mutation({
 	args: {
 		id: v.id("campaignMembers"),

@@ -16,7 +16,9 @@ import { Route as UsersIndexRouteImport } from './routes/users/index'
 import { Route as CampaignsIndexRouteImport } from './routes/campaigns/index'
 import { Route as CampaignsNewRouteImport } from './routes/campaigns/new'
 import { Route as CampaignsCampaignIdRouteRouteImport } from './routes/campaigns/$campaignId/route'
+import { Route as CampaignsCampaignIdIndexRouteImport } from './routes/campaigns/$campaignId/index'
 import { Route as UsersUserIdCharactersRouteImport } from './routes/users/$userId.characters'
+import { Route as CampaignsCampaignIdLoginRouteImport } from './routes/campaigns/$campaignId/login'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -54,41 +56,58 @@ const CampaignsCampaignIdRouteRoute =
     path: '/campaigns/$campaignId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const CampaignsCampaignIdIndexRoute =
+  CampaignsCampaignIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => CampaignsCampaignIdRouteRoute,
+  } as any)
 const UsersUserIdCharactersRoute = UsersUserIdCharactersRouteImport.update({
   id: '/$userId/characters',
   path: '/$userId/characters',
   getParentRoute: () => UsersRouteRoute,
 } as any)
+const CampaignsCampaignIdLoginRoute =
+  CampaignsCampaignIdLoginRouteImport.update({
+    id: '/login',
+    path: '/login',
+    getParentRoute: () => CampaignsCampaignIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/users': typeof UsersRouteRouteWithChildren
   '/login': typeof LoginRoute
-  '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRoute
+  '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRouteWithChildren
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/users/': typeof UsersIndexRoute
+  '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
+  '/campaigns/$campaignId/': typeof CampaignsCampaignIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRoute
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns': typeof CampaignsIndexRoute
   '/users': typeof UsersIndexRoute
+  '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
+  '/campaigns/$campaignId': typeof CampaignsCampaignIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/users': typeof UsersRouteRouteWithChildren
   '/login': typeof LoginRoute
-  '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRoute
+  '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRouteWithChildren
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/users/': typeof UsersIndexRoute
+  '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
+  '/campaigns/$campaignId/': typeof CampaignsCampaignIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -100,16 +119,19 @@ export interface FileRouteTypes {
     | '/campaigns/new'
     | '/campaigns/'
     | '/users/'
+    | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
+    | '/campaigns/$campaignId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
-    | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/campaigns'
     | '/users'
+    | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
+    | '/campaigns/$campaignId'
   id:
     | '__root__'
     | '/'
@@ -119,14 +141,16 @@ export interface FileRouteTypes {
     | '/campaigns/new'
     | '/campaigns/'
     | '/users/'
+    | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
+    | '/campaigns/$campaignId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   UsersRouteRoute: typeof UsersRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
-  CampaignsCampaignIdRouteRoute: typeof CampaignsCampaignIdRouteRoute
+  CampaignsCampaignIdRouteRoute: typeof CampaignsCampaignIdRouteRouteWithChildren
   CampaignsNewRoute: typeof CampaignsNewRoute
   CampaignsIndexRoute: typeof CampaignsIndexRoute
 }
@@ -182,12 +206,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignsCampaignIdRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/campaigns/$campaignId/': {
+      id: '/campaigns/$campaignId/'
+      path: '/'
+      fullPath: '/campaigns/$campaignId/'
+      preLoaderRoute: typeof CampaignsCampaignIdIndexRouteImport
+      parentRoute: typeof CampaignsCampaignIdRouteRoute
+    }
     '/users/$userId/characters': {
       id: '/users/$userId/characters'
       path: '/$userId/characters'
       fullPath: '/users/$userId/characters'
       preLoaderRoute: typeof UsersUserIdCharactersRouteImport
       parentRoute: typeof UsersRouteRoute
+    }
+    '/campaigns/$campaignId/login': {
+      id: '/campaigns/$campaignId/login'
+      path: '/login'
+      fullPath: '/campaigns/$campaignId/login'
+      preLoaderRoute: typeof CampaignsCampaignIdLoginRouteImport
+      parentRoute: typeof CampaignsCampaignIdRouteRoute
     }
   }
 }
@@ -206,11 +244,27 @@ const UsersRouteRouteWithChildren = UsersRouteRoute._addFileChildren(
   UsersRouteRouteChildren,
 )
 
+interface CampaignsCampaignIdRouteRouteChildren {
+  CampaignsCampaignIdLoginRoute: typeof CampaignsCampaignIdLoginRoute
+  CampaignsCampaignIdIndexRoute: typeof CampaignsCampaignIdIndexRoute
+}
+
+const CampaignsCampaignIdRouteRouteChildren: CampaignsCampaignIdRouteRouteChildren =
+  {
+    CampaignsCampaignIdLoginRoute: CampaignsCampaignIdLoginRoute,
+    CampaignsCampaignIdIndexRoute: CampaignsCampaignIdIndexRoute,
+  }
+
+const CampaignsCampaignIdRouteRouteWithChildren =
+  CampaignsCampaignIdRouteRoute._addFileChildren(
+    CampaignsCampaignIdRouteRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   UsersRouteRoute: UsersRouteRouteWithChildren,
   LoginRoute: LoginRoute,
-  CampaignsCampaignIdRouteRoute: CampaignsCampaignIdRouteRoute,
+  CampaignsCampaignIdRouteRoute: CampaignsCampaignIdRouteRouteWithChildren,
   CampaignsNewRoute: CampaignsNewRoute,
   CampaignsIndexRoute: CampaignsIndexRoute,
 }

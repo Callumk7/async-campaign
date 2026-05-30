@@ -106,16 +106,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
 		}
 	}, [clearSelectedCharacter]);
 
-	const selectCharacter = React.useCallback((character: Doc<"characters">) => {
-		setSelectedCharacterSnapshot(character);
-		setSelectedCharacterId(character._id);
-		if (typeof window !== "undefined") {
-			window.localStorage.setItem(
-				SELECTED_CHARACTER_STORAGE_KEY,
-				character._id,
-			);
-		}
-	}, []);
+	const selectCharacter = React.useCallback(
+		(character: Doc<"characters">) => {
+			if (!selectedUserId || character.playerId !== selectedUserId) {
+				throw new Error(
+					"Cannot select a character that does not belong to the selected user.",
+				);
+			}
+
+			setSelectedCharacterSnapshot(character);
+			setSelectedCharacterId(character._id);
+			if (typeof window !== "undefined") {
+				window.localStorage.setItem(
+					SELECTED_CHARACTER_STORAGE_KEY,
+					character._id,
+				);
+			}
+		},
+		[selectedUserId],
+	);
 
 	React.useEffect(() => {
 		if (selectedUserId && selectedUserQuery.data === null) {
