@@ -12,7 +12,7 @@ import { Button } from "~/components/ui/button";
 import { Field, FieldError, Form, Label } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Link } from "~/components/ui/link";
-import { Select } from "~/components/ui/select";
+import { NativeSelect as Select } from "~/components/ui/native-select";
 import { Textarea } from "~/components/ui/textarea";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
@@ -319,9 +319,9 @@ function RouteComponent() {
 										<option value="dm">DM</option>
 										<option value="admin">Admin</option>
 									</Select>
-									<button
+									<Button
 										type="button"
-										className="text-sm text-red-600 hover:underline"
+										variant="destructive"
 										onClick={() => {
 											if (row.membership.userId === data.campaign.ownerId)
 												return;
@@ -338,7 +338,7 @@ function RouteComponent() {
 										disabled={row.membership.userId === data.campaign.ownerId}
 									>
 										Remove
-									</button>
+									</Button>
 								</div>
 							</li>
 						))}

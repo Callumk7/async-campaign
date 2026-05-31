@@ -5,10 +5,11 @@ import * as React from "react";
 import { useAuth } from "~/components/auth/auth-provider";
 import { Authenticated } from "~/components/auth/autheticated";
 import { Button } from "~/components/ui/button";
+import { Card, CardContent } from "~/components/ui/card";
 import { Field, FieldError, Form, Label } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Link } from "~/components/ui/link";
-import { Select } from "~/components/ui/select";
+import { NativeSelect as Select } from "~/components/ui/native-select";
 import { Textarea } from "~/components/ui/textarea";
 import { api } from "../../../convex/_generated/api";
 
@@ -49,109 +50,114 @@ function RouteComponent() {
 					)}
 				</div>
 
-				<Form
-					className="rounded border p-4"
-					onSubmit={async (event) => {
-						event.preventDefault();
-						setError(null);
+				<Card>
+					<CardContent>
+						<Form
+							onSubmit={async (event) => {
+								event.preventDefault();
+								setError(null);
 
-						const trimmedName = name.trim();
-						const trimmedDescription = description.trim();
-						const trimmedCoverImageUrl = coverImageUrl.trim();
+								const trimmedName = name.trim();
+								const trimmedDescription = description.trim();
+								const trimmedCoverImageUrl = coverImageUrl.trim();
 
-						if (!trimmedName) {
-							setError("Campaign name is required.");
-							return;
-						}
+								if (!trimmedName) {
+									setError("Campaign name is required.");
+									return;
+								}
 
-						if (!canCreateCampaign) {
-							setError("Only admin and DM users can create campaigns.");
-							return;
-						}
+								if (!canCreateCampaign) {
+									setError("Only admin and DM users can create campaigns.");
+									return;
+								}
 
-						try {
-							const campaignId = await createCampaign.mutateAsync({
-								name: trimmedName,
-								description: trimmedDescription || undefined,
-								ownerId: selectedUserId ?? undefined,
-								status,
-								coverImageUrl: trimmedCoverImageUrl || undefined,
-							});
+								try {
+									const campaignId = await createCampaign.mutateAsync({
+										name: trimmedName,
+										description: trimmedDescription || undefined,
+										ownerId: selectedUserId ?? undefined,
+										status,
+										coverImageUrl: trimmedCoverImageUrl || undefined,
+									});
 
-							void navigate({
-								to: "/campaigns/$campaignId",
-								params: { campaignId },
-							});
-						} catch (caughtError) {
-							setError(
-								caughtError instanceof Error
-									? caughtError.message
-									: "Failed to create campaign.",
-							);
-						}
-					}}
-				>
-					<Field>
-						<Label htmlFor="campaign-name">Name</Label>
-						<Input
-							id="campaign-name"
-							placeholder="The Shattered Isles"
-							value={name}
-							onChange={(event) => setName(event.target.value)}
-							required
-						/>
-					</Field>
-
-					<Field>
-						<Label htmlFor="campaign-description">Description</Label>
-						<Textarea
-							id="campaign-description"
-							placeholder="What is this campaign about?"
-							value={description}
-							onChange={(event) => setDescription(event.target.value)}
-							rows={5}
-						/>
-					</Field>
-
-					<Field>
-						<Label htmlFor="campaign-cover-image-url">Cover image URL</Label>
-						<Input
-							id="campaign-cover-image-url"
-							placeholder="https://example.com/image.jpg"
-							value={coverImageUrl}
-							onChange={(event) => setCoverImageUrl(event.target.value)}
-						/>
-					</Field>
-
-					<Field>
-						<Label htmlFor="campaign-status">Status</Label>
-						<Select
-							id="campaign-status"
-							value={status}
-							onChange={(event) =>
-								setStatus(
-									event.target.value as "active" | "paused" | "archived",
-								)
-							}
+									void navigate({
+										to: "/campaigns/$campaignId",
+										params: { campaignId },
+									});
+								} catch (caughtError) {
+									setError(
+										caughtError instanceof Error
+											? caughtError.message
+											: "Failed to create campaign.",
+									);
+								}
+							}}
 						>
-							<option value="active">Active</option>
-							<option value="paused">Paused</option>
-							<option value="archived">Archived</option>
-						</Select>
-					</Field>
+							<Field>
+								<Label htmlFor="campaign-name">Name</Label>
+								<Input
+									id="campaign-name"
+									placeholder="The Shattered Isles"
+									value={name}
+									onChange={(event) => setName(event.target.value)}
+									required
+								/>
+							</Field>
 
-					{error ? <FieldError>{error}</FieldError> : null}
+							<Field>
+								<Label htmlFor="campaign-description">Description</Label>
+								<Textarea
+									id="campaign-description"
+									placeholder="What is this campaign about?"
+									value={description}
+									onChange={(event) => setDescription(event.target.value)}
+									rows={5}
+								/>
+							</Field>
 
-					<div className="flex gap-2">
-						<Button
-							type="submit"
-							disabled={createCampaign.isPending || !canCreateCampaign}
-						>
-							{createCampaign.isPending ? "Creating..." : "Create campaign"}
-						</Button>
-						<Link to="/campaigns">Cancel</Link>
-					</div>
-				</Form>
+							<Field>
+								<Label htmlFor="campaign-cover-image-url">
+									Cover image URL
+								</Label>
+								<Input
+									id="campaign-cover-image-url"
+									placeholder="https://example.com/image.jpg"
+									value={coverImageUrl}
+									onChange={(event) => setCoverImageUrl(event.target.value)}
+								/>
+							</Field>
+
+							<Field>
+								<Label htmlFor="campaign-status">Status</Label>
+								<Select
+									id="campaign-status"
+									value={status}
+									onChange={(event) =>
+										setStatus(
+											event.target.value as "active" | "paused" | "archived",
+										)
+									}
+								>
+									<option value="active">Active</option>
+									<option value="paused">Paused</option>
+									<option value="archived">Archived</option>
+								</Select>
+							</Field>
+
+							{error ? <FieldError>{error}</FieldError> : null}
+
+							<div className="flex gap-2">
+								<Button
+									type="submit"
+									disabled={createCampaign.isPending || !canCreateCampaign}
+								>
+									{createCampaign.isPending ? "Creating..." : "Create campaign"}
+								</Button>
+								<Link to="/campaigns">Cancel</Link>
+							</div>
+						</Form>
+					</CardContent>
+				</Card>
 			</main>
 		</Authenticated>
 	);

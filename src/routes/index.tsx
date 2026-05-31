@@ -1,4 +1,10 @@
 import { createFileRoute, type LinkProps } from "@tanstack/react-router";
+import {
+	Card,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -42,12 +48,13 @@ function LinkCard({
 	children: React.ReactNode;
 }) {
 	return (
-		<Link
-			to={to}
-			className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:border-blue-300 hover:no-underline"
-		>
-			<h2 className="text-xl font-semibold text-slate-950">{title}</h2>
-			<p className="mt-2 text-sm text-slate-600">{children}</p>
+		<Link to={to} className="hover:no-underline">
+			<Card className="hover:border-blue-300">
+				<CardHeader>
+					<CardTitle>{title}</CardTitle>
+					<CardDescription>{children}</CardDescription>
+				</CardHeader>
+			</Card>
 		</Link>
 	);
 }

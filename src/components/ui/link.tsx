@@ -1,15 +1,30 @@
-import { type LinkProps, Link as TanstackLink } from "@tanstack/react-router";
-import { cn } from "~/lib/classnames";
+import {
+	Link as RouterLink,
+	type LinkProps as RouterLinkProps,
+} from "@tanstack/react-router";
+import type { VariantProps } from "class-variance-authority";
+import { cn } from "~/lib/utils";
+import { buttonVariants } from "./button";
 
-type AppLinkProps = LinkProps & {
+interface LinkProps
+	extends RouterLinkProps,
+		VariantProps<typeof buttonVariants> {
 	className?: string;
-};
+}
 
-export function Link({ className, ...props }: AppLinkProps) {
+function Link({
+	className,
+	variant = "link",
+	size = "default",
+	...props
+}: LinkProps) {
 	return (
-		<TanstackLink
-			className={cn("text-blue-500 hover:underline", className)}
+		<RouterLink
+			data-slot="link"
+			className={cn(buttonVariants({ variant, size, className }))}
 			{...props}
 		/>
 	);
 }
+
+export { Link };
