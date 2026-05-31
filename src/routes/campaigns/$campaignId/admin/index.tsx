@@ -9,7 +9,12 @@ import * as React from "react";
 import { useAuth } from "~/components/auth/auth-provider";
 import { Authenticated } from "~/components/auth/autheticated";
 import { Button } from "~/components/ui/button";
-import { Field, FieldError, Form, Label } from "~/components/ui/form";
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { Link } from "~/components/ui/link";
 import { NativeSelect as Select } from "~/components/ui/native-select";
@@ -148,7 +153,7 @@ function RouteComponent() {
 
 				<section className="rounded-xl border p-5 shadow-sm">
 					<h2 className="mb-4 text-xl font-semibold">Campaign details</h2>
-					<Form
+					<form
 						onSubmit={async (event) => {
 							event.preventDefault();
 							await run("Campaign", () =>
@@ -160,10 +165,11 @@ function RouteComponent() {
 								}),
 							);
 						}}
+						className="flex flex-col gap-4"
 					>
-						<div className="grid gap-4 md:grid-cols-3">
+						<FieldGroup className="grid gap-4 md:grid-cols-3">
 							<Field>
-								<Label htmlFor="campaign-name">Name</Label>
+								<FieldLabel htmlFor="campaign-name">Name</FieldLabel>
 								<Input
 									id="campaign-name"
 									value={name}
@@ -172,7 +178,7 @@ function RouteComponent() {
 								/>
 							</Field>
 							<Field>
-								<Label htmlFor="campaign-status">Status</Label>
+								<FieldLabel htmlFor="campaign-status">Status</FieldLabel>
 								<Select
 									id="campaign-status"
 									value={status}
@@ -190,16 +196,18 @@ function RouteComponent() {
 									{updateCampaign.isPending ? "Saving..." : "Save campaign"}
 								</Button>
 							</div>
-						</div>
+						</FieldGroup>
 						<Field>
-							<Label htmlFor="campaign-description">Description</Label>
+							<FieldLabel htmlFor="campaign-description">
+								Description
+							</FieldLabel>
 							<Textarea
 								id="campaign-description"
 								value={description}
 								onChange={(event) => setDescription(event.target.value)}
 							/>
 						</Field>
-					</Form>
+					</form>
 				</section>
 
 				<section className="rounded-xl border p-5 shadow-sm">
@@ -209,7 +217,7 @@ function RouteComponent() {
 							Every user has already been added to this campaign.
 						</p>
 					) : (
-						<Form
+						<form
 							onSubmit={async (event) => {
 								event.preventDefault();
 								if (!userIdToAdd || !selectedUserId) return;
@@ -225,9 +233,9 @@ function RouteComponent() {
 								});
 							}}
 						>
-							<div className="grid gap-4 md:grid-cols-[1fr_12rem_auto]">
+							<FieldGroup className="grid gap-4 md:grid-cols-[1fr_12rem_auto]">
 								<Field>
-									<Label htmlFor="user-to-add">User</Label>
+									<FieldLabel htmlFor="user-to-add">User</FieldLabel>
 									<Select
 										id="user-to-add"
 										value={userIdToAdd}
@@ -245,7 +253,7 @@ function RouteComponent() {
 									</Select>
 								</Field>
 								<Field>
-									<Label htmlFor="role-to-add">Campaign role</Label>
+									<FieldLabel htmlFor="role-to-add">Campaign role</FieldLabel>
 									<Select
 										id="role-to-add"
 										value={roleToAdd}
@@ -267,8 +275,8 @@ function RouteComponent() {
 										{addUser.isPending ? "Adding..." : "Add user"}
 									</Button>
 								</div>
-							</div>
-						</Form>
+							</FieldGroup>
+						</form>
 					)}
 				</section>
 

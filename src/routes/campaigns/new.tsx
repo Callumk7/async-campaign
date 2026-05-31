@@ -6,7 +6,12 @@ import { useAuth } from "~/components/auth/auth-provider";
 import { Authenticated } from "~/components/auth/autheticated";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
-import { Field, FieldError, Form, Label } from "~/components/ui/form";
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { Link } from "~/components/ui/link";
 import { NativeSelect as Select } from "~/components/ui/native-select";
@@ -52,7 +57,7 @@ function RouteComponent() {
 
 				<Card>
 					<CardContent>
-						<Form
+						<form
 							onSubmit={async (event) => {
 								event.preventDefault();
 								setError(null);
@@ -92,57 +97,62 @@ function RouteComponent() {
 									);
 								}
 							}}
+							className="flex flex-col gap-4"
 						>
-							<Field>
-								<Label htmlFor="campaign-name">Name</Label>
-								<Input
-									id="campaign-name"
-									placeholder="The Shattered Isles"
-									value={name}
-									onChange={(event) => setName(event.target.value)}
-									required
-								/>
-							</Field>
+							<FieldGroup>
+								<Field>
+									<FieldLabel htmlFor="campaign-name">Name</FieldLabel>
+									<Input
+										id="campaign-name"
+										placeholder="The Shattered Isles"
+										value={name}
+										onChange={(event) => setName(event.target.value)}
+										required
+									/>
+								</Field>
 
-							<Field>
-								<Label htmlFor="campaign-description">Description</Label>
-								<Textarea
-									id="campaign-description"
-									placeholder="What is this campaign about?"
-									value={description}
-									onChange={(event) => setDescription(event.target.value)}
-									rows={5}
-								/>
-							</Field>
+								<Field>
+									<FieldLabel htmlFor="campaign-description">
+										Description
+									</FieldLabel>
+									<Textarea
+										id="campaign-description"
+										placeholder="What is this campaign about?"
+										value={description}
+										onChange={(event) => setDescription(event.target.value)}
+										rows={5}
+									/>
+								</Field>
 
-							<Field>
-								<Label htmlFor="campaign-cover-image-url">
-									Cover image URL
-								</Label>
-								<Input
-									id="campaign-cover-image-url"
-									placeholder="https://example.com/image.jpg"
-									value={coverImageUrl}
-									onChange={(event) => setCoverImageUrl(event.target.value)}
-								/>
-							</Field>
+								<Field>
+									<FieldLabel htmlFor="campaign-cover-image-url">
+										Cover image URL
+									</FieldLabel>
+									<Input
+										id="campaign-cover-image-url"
+										placeholder="https://example.com/image.jpg"
+										value={coverImageUrl}
+										onChange={(event) => setCoverImageUrl(event.target.value)}
+									/>
+								</Field>
 
-							<Field>
-								<Label htmlFor="campaign-status">Status</Label>
-								<Select
-									id="campaign-status"
-									value={status}
-									onChange={(event) =>
-										setStatus(
-											event.target.value as "active" | "paused" | "archived",
-										)
-									}
-								>
-									<option value="active">Active</option>
-									<option value="paused">Paused</option>
-									<option value="archived">Archived</option>
-								</Select>
-							</Field>
+								<Field>
+									<FieldLabel htmlFor="campaign-status">Status</FieldLabel>
+									<Select
+										id="campaign-status"
+										value={status}
+										onChange={(event) =>
+											setStatus(
+												event.target.value as "active" | "paused" | "archived",
+											)
+										}
+									>
+										<option value="active">Active</option>
+										<option value="paused">Paused</option>
+										<option value="archived">Archived</option>
+									</Select>
+								</Field>
+							</FieldGroup>
 
 							{error ? <FieldError>{error}</FieldError> : null}
 
@@ -155,7 +165,7 @@ function RouteComponent() {
 								</Button>
 								<Link to="/campaigns">Cancel</Link>
 							</div>
-						</Form>
+						</form>
 					</CardContent>
 				</Card>
 			</main>

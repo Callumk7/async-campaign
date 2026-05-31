@@ -5,7 +5,12 @@ import * as React from "react";
 import { useAuth } from "~/components/auth/auth-provider";
 import { Authenticated } from "~/components/auth/autheticated";
 import { Button } from "~/components/ui/button";
-import { Field, FieldError, Form, Label } from "~/components/ui/form";
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { Link } from "~/components/ui/link";
 import { Textarea } from "~/components/ui/textarea";
@@ -137,7 +142,7 @@ function RouteComponent() {
 
 				<section className="rounded-xl border p-5 shadow-sm">
 					<h2 className="text-xl font-semibold">Create a campaign character</h2>
-					<Form
+					<form
 						onSubmit={async (event) => {
 							event.preventDefault();
 							if (!selectedUserId || !name.trim()) return;
@@ -172,26 +177,31 @@ function RouteComponent() {
 								);
 							}
 						}}
+						className="flex flex-col gap-4"
 					>
-						<Field>
-							<Label htmlFor="character-name">Name</Label>
-							<Input
-								id="character-name"
-								value={name}
-								onChange={(event) => setName(event.target.value)}
-								disabled={!membership}
-								required
-							/>
-						</Field>
-						<Field>
-							<Label htmlFor="character-description">Description</Label>
-							<Textarea
-								id="character-description"
-								value={description}
-								onChange={(event) => setDescription(event.target.value)}
-								disabled={!membership}
-							/>
-						</Field>
+						<FieldGroup>
+							<Field>
+								<FieldLabel htmlFor="character-name">Name</FieldLabel>
+								<Input
+									id="character-name"
+									value={name}
+									onChange={(event) => setName(event.target.value)}
+									disabled={!membership}
+									required
+								/>
+							</Field>
+							<Field>
+								<FieldLabel htmlFor="character-description">
+									Description
+								</FieldLabel>
+								<Textarea
+									id="character-description"
+									value={description}
+									onChange={(event) => setDescription(event.target.value)}
+									disabled={!membership}
+								/>
+							</Field>
+						</FieldGroup>
 						<Button
 							type="submit"
 							disabled={
@@ -202,7 +212,7 @@ function RouteComponent() {
 						>
 							{createCharacter.isPending ? "Creating..." : "Create and play"}
 						</Button>
-					</Form>
+					</form>
 				</section>
 
 				<section className="rounded-xl border p-5 shadow-sm">

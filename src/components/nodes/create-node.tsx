@@ -2,7 +2,7 @@ import { useConvexMutation } from "@convex-dev/react-query";
 import { useMutation } from "@tanstack/react-query";
 import * as React from "react";
 import { Button } from "~/components/ui/button";
-import { Field, Form, Label } from "~/components/ui/form";
+import { Field, FieldGroup, FieldLabel } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { api } from "../../../convex/_generated/api";
@@ -20,8 +20,8 @@ export function CreateNode({ campaignId }: CreateNodeProps) {
 		mutationFn: useConvexMutation(api.decisionNodes.createDecisionNode),
 	});
 
-	const handleCreateNode = async (e: React.ChangeEvent<HTMLFormElement>) => {
-		e.preventDefault();
+	const handleCreateNode = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		await createNodeMutation.mutateAsync({
 			name,
 			content,
@@ -31,25 +31,27 @@ export function CreateNode({ campaignId }: CreateNodeProps) {
 
 	return (
 		<div>
-			<Form onSubmit={handleCreateNode}>
-				<Field>
-					<Label htmlFor="node-name">Name</Label>
-					<Input
-						id="node-name"
-						value={name}
-						onChange={(e) => setName(e.target.value)}
-					/>
-				</Field>
-				<Field>
-					<Label htmlFor="node-content">Content</Label>
-					<Textarea
-						id="node-content"
-						value={content}
-						onChange={(e) => setContent(e.target.value)}
-					/>
-				</Field>
+			<form onSubmit={handleCreateNode} className="flex flex-col gap-4">
+				<FieldGroup>
+					<Field>
+						<FieldLabel htmlFor="node-name">Name</FieldLabel>
+						<Input
+							id="node-name"
+							value={name}
+							onChange={(event) => setName(event.target.value)}
+						/>
+					</Field>
+					<Field>
+						<FieldLabel htmlFor="node-content">Content</FieldLabel>
+						<Textarea
+							id="node-content"
+							value={content}
+							onChange={(event) => setContent(event.target.value)}
+						/>
+					</Field>
+				</FieldGroup>
 				<Button type="submit">Create Node</Button>
-			</Form>
+			</form>
 		</div>
 	);
 }

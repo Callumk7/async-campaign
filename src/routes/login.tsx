@@ -5,7 +5,7 @@ import * as React from "react";
 import { useAuth } from "~/components/auth/auth-provider";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Field, Form } from "~/components/ui/form";
+import { Field, FieldGroup, FieldLabel } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { NativeSelect as Select } from "~/components/ui/native-select";
 import { api } from "../../convex/_generated/api";
@@ -58,8 +58,7 @@ function RouteComponent() {
 					<CardTitle>Create a user</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<Form
-						className="grid gap-2 sm:grid-cols-[1fr_10rem_auto]"
+					<form
 						onSubmit={async (event) => {
 							event.preventDefault();
 							const trimmedName = name.trim();
@@ -81,27 +80,39 @@ function RouteComponent() {
 							void navigate({ to: "/" });
 						}}
 					>
-						<Field>
-							<Input
-								aria-label="User name"
-								placeholder="User name"
-								value={name}
-								onChange={(event) => setName(event.target.value)}
-							/>
-						</Field>
-						<Select
-							aria-label="Role"
-							value={role}
-							onChange={(event) => setRole(event.target.value as typeof role)}
-						>
-							<option value="player">Player</option>
-							<option value="dm">DM</option>
-							<option value="admin">Admin</option>
-						</Select>
-						<Button type="submit" disabled={createUser.isPending}>
-							Create user
-						</Button>
-					</Form>
+						<FieldGroup className="grid gap-2 sm:grid-cols-[1fr_10rem_auto]">
+							<Field>
+								<FieldLabel htmlFor="login-user-name" className="sr-only">
+									User name
+								</FieldLabel>
+								<Input
+									id="login-user-name"
+									placeholder="User name"
+									value={name}
+									onChange={(event) => setName(event.target.value)}
+								/>
+							</Field>
+							<Field>
+								<FieldLabel htmlFor="login-user-role" className="sr-only">
+									Role
+								</FieldLabel>
+								<Select
+									id="login-user-role"
+									value={role}
+									onChange={(event) =>
+										setRole(event.target.value as typeof role)
+									}
+								>
+									<option value="player">Player</option>
+									<option value="dm">DM</option>
+									<option value="admin">Admin</option>
+								</Select>
+							</Field>
+							<Button type="submit" disabled={createUser.isPending}>
+								Create user
+							</Button>
+						</FieldGroup>
+					</form>
 					{createUser.isPending && <p>Creating user...</p>}
 				</CardContent>
 			</Card>
