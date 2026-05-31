@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from "react";
-import { cn } from "#/lib/classnames";
+import { cn } from "~/lib/classnames";
 
 export function Button({
 	className,

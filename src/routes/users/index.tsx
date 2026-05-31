@@ -6,14 +6,14 @@ import {
 } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import * as React from "react";
-import { Authenticated } from "#/components/auth/autheticated";
-import { Button } from "#/components/ui/button";
-import { Field, Form, Label } from "#/components/ui/form";
-import { Input } from "#/components/ui/input";
-import { Select } from "#/components/ui/select";
+import { Authenticated } from "~/components/auth/autheticated";
+import { Button } from "~/components/ui/button";
+import { Field, Form, Label } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Select } from "~/components/ui/select";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
-import { Link } from "#/components/ui/link";
+import { Link } from "~/components/ui/link";
 
 export const Route = createFileRoute("/users/")({
 	component: RouteComponent,

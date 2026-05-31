@@ -2,14 +2,14 @@ import { useConvexMutation } from "@convex-dev/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import * as React from "react";
-import { useAuth } from "#/components/auth/auth-provider";
-import { Authenticated } from "#/components/auth/autheticated";
-import { Button } from "#/components/ui/button";
-import { Field, FieldError, Form, Label } from "#/components/ui/form";
-import { Input } from "#/components/ui/input";
-import { Link } from "#/components/ui/link";
-import { Select } from "#/components/ui/select";
-import { Textarea } from "#/components/ui/textarea";
+import { useAuth } from "~/components/auth/auth-provider";
+import { Authenticated } from "~/components/auth/autheticated";
+import { Button } from "~/components/ui/button";
+import { Field, FieldError, Form, Label } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Link } from "~/components/ui/link";
+import { Select } from "~/components/ui/select";
+import { Textarea } from "~/components/ui/textarea";
 import { api } from "../../../convex/_generated/api";
 
 export const Route = createFileRoute("/campaigns/new")({

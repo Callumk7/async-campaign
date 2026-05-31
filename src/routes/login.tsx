@@ -2,7 +2,7 @@ import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import * as React from "react";
-import { useAuth } from "#/components/auth/auth-provider";
+import { useAuth } from "~/components/auth/auth-provider";
 import { api } from "../../convex/_generated/api";
 
 export const Route = createFileRoute("/login")({

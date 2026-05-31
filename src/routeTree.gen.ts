@@ -14,6 +14,7 @@ import { Route as UsersRouteRouteImport } from './routes/users/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UsersIndexRouteImport } from './routes/users/index'
 import { Route as CampaignsIndexRouteImport } from './routes/campaigns/index'
+import { Route as UsersMeRouteImport } from './routes/users/me'
 import { Route as CampaignsNewRouteImport } from './routes/campaigns/new'
 import { Route as CampaignsCampaignIdRouteRouteImport } from './routes/campaigns/$campaignId/route'
 import { Route as CampaignsCampaignIdIndexRouteImport } from './routes/campaigns/$campaignId/index'
@@ -47,6 +48,11 @@ const CampaignsIndexRoute = CampaignsIndexRouteImport.update({
   id: '/campaigns/',
   path: '/campaigns/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const UsersMeRoute = UsersMeRouteImport.update({
+  id: '/me',
+  path: '/me',
+  getParentRoute: () => UsersRouteRoute,
 } as any)
 const CampaignsNewRoute = CampaignsNewRouteImport.update({
   id: '/campaigns/new',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRouteWithChildren
   '/campaigns/new': typeof CampaignsNewRoute
+  '/users/me': typeof UsersMeRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/users/': typeof UsersIndexRoute
   '/campaigns/$campaignId/admin': typeof CampaignsCampaignIdAdminRouteRouteWithChildren
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/campaigns/new': typeof CampaignsNewRoute
+  '/users/me': typeof UsersMeRoute
   '/campaigns': typeof CampaignsIndexRoute
   '/users': typeof UsersIndexRoute
   '/campaigns/$campaignId/chat': typeof CampaignsCampaignIdChatRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRouteWithChildren
   '/campaigns/new': typeof CampaignsNewRoute
+  '/users/me': typeof UsersMeRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/users/': typeof UsersIndexRoute
   '/campaigns/$campaignId/admin': typeof CampaignsCampaignIdAdminRouteRouteWithChildren
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
+    | '/users/me'
     | '/campaigns/'
     | '/users/'
     | '/campaigns/$campaignId/admin'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/campaigns/new'
+    | '/users/me'
     | '/campaigns'
     | '/users'
     | '/campaigns/$campaignId/chat'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
+    | '/users/me'
     | '/campaigns/'
     | '/users/'
     | '/campaigns/$campaignId/admin'
@@ -227,6 +239,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/campaigns/'
       preLoaderRoute: typeof CampaignsIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/users/me': {
+      id: '/users/me'
+      path: '/me'
+      fullPath: '/users/me'
+      preLoaderRoute: typeof UsersMeRouteImport
+      parentRoute: typeof UsersRouteRoute
     }
     '/campaigns/new': {
       id: '/campaigns/new'
@@ -288,11 +307,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface UsersRouteRouteChildren {
+  UsersMeRoute: typeof UsersMeRoute
   UsersIndexRoute: typeof UsersIndexRoute
   UsersUserIdCharactersRoute: typeof UsersUserIdCharactersRoute
 }
 
 const UsersRouteRouteChildren: UsersRouteRouteChildren = {
+  UsersMeRoute: UsersMeRoute,
   UsersIndexRoute: UsersIndexRoute,
   UsersUserIdCharactersRoute: UsersUserIdCharactersRoute,
 }

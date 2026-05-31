@@ -5,8 +5,8 @@ import {
 	useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Authenticated } from "#/components/auth/autheticated";
-import { Link } from "#/components/ui/link";
+import { Authenticated } from "~/components/auth/autheticated";
+import { Link } from "~/components/ui/link";
 import { api } from "../../../convex/_generated/api";
 
 export const Route = createFileRoute("/campaigns/")({

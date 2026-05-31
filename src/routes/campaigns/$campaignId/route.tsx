@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { useAuth } from "#/components/auth/auth-provider";
-import { Link } from "#/components/ui/link";
+import { useAuth } from "~/components/auth/auth-provider";
+import { Link } from "~/components/ui/link";
 
 export const Route = createFileRoute("/campaigns/$campaignId")({
 	component: RouteComponent,

@@ -1,10 +1,10 @@
 import { useConvexMutation } from "@convex-dev/react-query";
 import { useMutation } from "@tanstack/react-query";
 import * as React from "react";
-import { Button } from "#/components/ui/button";
-import { Field, Form, Label } from "#/components/ui/form";
-import { Input } from "#/components/ui/input";
-import { Textarea } from "#/components/ui/textarea";
+import { Button } from "~/components/ui/button";
+import { Field, Form, Label } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 
