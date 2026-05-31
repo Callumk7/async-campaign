@@ -1,5 +1,15 @@
 import { type LinkProps, Link as TanstackLink } from "@tanstack/react-router";
+import { cn } from "~/lib/classnames";
 
-export function Link({ ...props }: LinkProps) {
-	return <TanstackLink className="text-blue-500 hover:underline" {...props} />;
+type AppLinkProps = LinkProps & {
+	className?: string;
+};
+
+export function Link({ className, ...props }: AppLinkProps) {
+	return (
+		<TanstackLink
+			className={cn("text-blue-500 hover:underline", className)}
+			{...props}
+		/>
+	);
 }

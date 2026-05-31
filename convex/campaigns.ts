@@ -76,7 +76,25 @@ export const getCampaignWithChildren = query({
 				.take(50),
 		]);
 
-		return { campaign, memberships, characters, decisionNodes, locations, factions, notes, messages: messages.reverse() };
+		const membersWithUsers = await Promise.all(
+			memberships.map(async (membership) => ({
+				membership,
+				user: await ctx.db.get(membership.userId),
+				activeCharacter: membership.activeCharacterId ? await ctx.db.get(membership.activeCharacterId) : null,
+			})),
+		);
+
+		return {
+			campaign,
+			memberships,
+			membersWithUsers,
+			characters,
+			decisionNodes,
+			locations,
+			factions,
+			notes,
+			messages: messages.reverse(),
+		};
 	},
 });
 
@@ -100,7 +118,15 @@ export const createCampaign = mutation({
 		coverImageUrl: v.optional(v.string()),
 	},
 	handler: async (ctx, args) => {
-		return await ctx.db.insert("campaigns", {
+		if (args.ownerId) {
+			const owner = await ctx.db.get(args.ownerId);
+			if (!owner) throw new Error("Owner not found.");
+			if (owner.role !== "admin" && owner.role !== "dm") {
+				throw new Error("Only admins and DMs can create campaigns.");
+			}
+		}
+
+		const campaignId = await ctx.db.insert("campaigns", {
 			name: args.name,
 			description: args.description,
 			ownerId: args.ownerId,
@@ -109,6 +135,18 @@ export const createCampaign = mutation({
 			coverImageUrl: args.coverImageUrl,
 			updatedAt: Date.now(),
 		});
+
+		if (args.ownerId) {
+			await ctx.db.insert("campaignMembers", {
+				campaignId,
+				userId: args.ownerId,
+				role: "admin",
+				joinedAt: Date.now(),
+				updatedAt: Date.now(),
+			});
+		}
+
+		return campaignId;
 	},
 });
 
@@ -121,7 +159,6 @@ export const updateCampaign = mutation({
 		status: v.optional(campaignStatus),
 		currentDecisionNodeId: v.optional(v.id("decisionNodes")),
 		coverImageUrl: v.optional(v.string()),
-		members: v.optional(v.array(v.id("characters"))),
 	},
 	handler: async (ctx, args) => {
 		const { id, ...patch } = args;

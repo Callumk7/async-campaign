@@ -5,6 +5,7 @@ import {
 	useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { useAuth } from "~/components/auth/auth-provider";
 import { Authenticated } from "~/components/auth/autheticated";
 import { Link } from "~/components/ui/link";
 import { api } from "../../../convex/_generated/api";
@@ -20,11 +21,14 @@ export const Route = createFileRoute("/campaigns/")({
 
 function RouteComponent() {
 	const queryClient = useQueryClient();
+	const { selectedUser } = useAuth();
 	const campaignsQuery = convexQuery(api.campaigns.getCampaigns, {});
 	const { data } = useSuspenseQuery(campaignsQuery);
 	const deleteCampaign = useMutation({
 		mutationFn: useConvexMutation(api.campaigns.deleteCampaign),
 	});
+	const canCreateCampaign =
+		selectedUser?.role === "admin" || selectedUser?.role === "dm";
 
 	return (
 		<Authenticated>
@@ -39,12 +43,18 @@ function RouteComponent() {
 							Create campaigns and open one to test child CRUD functions.
 						</p>
 					</div>
-					<Link
-						to="/campaigns/new"
-						className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 hover:no-underline"
-					>
-						Create new campaign
-					</Link>
+					{canCreateCampaign ? (
+						<Link
+							to="/campaigns/new"
+							className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 hover:no-underline"
+						>
+							Create new campaign
+						</Link>
+					) : (
+						<p className="rounded border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-700">
+							Only admins and DMs can create campaigns.
+						</p>
+					)}
 				</div>
 
 				{data.length === 0 ? (

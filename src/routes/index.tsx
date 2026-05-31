@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, type LinkProps } from "@tanstack/react-router";
 import { Link } from "~/components/ui/link";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -37,7 +37,7 @@ function LinkCard({
 	title,
 	children,
 }: {
-	to: string;
+	to: LinkProps["to"];
 	title: string;
 	children: React.ReactNode;
 }) {

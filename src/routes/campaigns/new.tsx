@@ -18,7 +18,7 @@ export const Route = createFileRoute("/campaigns/new")({
 
 function RouteComponent() {
 	const navigate = useNavigate();
-	const { selectedUserId } = useAuth();
+	const { selectedUser, selectedUserId } = useAuth();
 	const createCampaign = useMutation({
 		mutationFn: useConvexMutation(api.campaigns.createCampaign),
 	});
@@ -30,6 +30,9 @@ function RouteComponent() {
 	);
 	const [error, setError] = React.useState<string | null>(null);
 
+	const canCreateCampaign =
+		selectedUser?.role === "admin" || selectedUser?.role === "dm";
+
 	return (
 		<Authenticated>
 			<main className="mx-auto flex max-w-2xl flex-col gap-6 p-8">
@@ -37,8 +40,13 @@ function RouteComponent() {
 					<Link to="/campaigns">← Back to campaigns</Link>
 					<h1 className="text-3xl font-bold">Create a campaign</h1>
 					<p className="text-sm text-neutral-600">
-						Start a new campaign. You will be set as the owner for this toy app.
+						Start a new campaign. You will be set as the campaign admin.
 					</p>
+					{canCreateCampaign ? null : (
+						<FieldError>
+							Only admin and DM users can create campaigns.
+						</FieldError>
+					)}
 				</div>
 
 				<Form
@@ -53,6 +61,11 @@ function RouteComponent() {
 
 						if (!trimmedName) {
 							setError("Campaign name is required.");
+							return;
+						}
+
+						if (!canCreateCampaign) {
+							setError("Only admin and DM users can create campaigns.");
 							return;
 						}
 
@@ -130,7 +143,10 @@ function RouteComponent() {
 					{error ? <FieldError>{error}</FieldError> : null}
 
 					<div className="flex gap-2">
-						<Button type="submit" disabled={createCampaign.isPending}>
+						<Button
+							type="submit"
+							disabled={createCampaign.isPending || !canCreateCampaign}
+						>
 							{createCampaign.isPending ? "Creating..." : "Create campaign"}
 						</Button>
 						<Link to="/campaigns">Cancel</Link>

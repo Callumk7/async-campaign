@@ -2,7 +2,7 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 const userRole = v.union(v.literal("admin"), v.literal("dm"), v.literal("player"));
-const campaignRole = v.union(v.literal("dm"), v.literal("player"), v.literal("observer"));
+const campaignRole = v.union(v.literal("admin"), v.literal("dm"), v.literal("player"), v.literal("observer"));
 const campaignStatus = v.union(v.literal("active"), v.literal("paused"), v.literal("archived"));
 const decisionNodeStatus = v.union(v.literal("draft"), v.literal("active"), v.literal("resolved"), v.literal("archived"));
 const visibility = v.union(v.literal("public"), v.literal("private"), v.literal("dm"));
@@ -45,15 +45,16 @@ export default defineSchema({
 		.index("by_status", ["status"]),
 	campaignMembers: defineTable({
 		campaignId: v.id("campaigns"),
-		characterId: v.id("characters"),
-		userId: v.optional(v.id("users")),
+		userId: v.id("users"),
 		role: campaignRole,
+		activeCharacterId: v.optional(v.id("characters")),
 		joinedAt: v.number(),
+		updatedAt: v.optional(v.number()),
 	})
 		.index("by_campaignId", ["campaignId"])
-		.index("by_characterId", ["characterId"])
 		.index("by_userId", ["userId"])
-		.index("by_campaignId_and_characterId", ["campaignId", "characterId"]),
+		.index("by_activeCharacterId", ["activeCharacterId"])
+		.index("by_campaignId_and_userId", ["campaignId", "userId"]),
 	decisionNodes: defineTable({
 		name: v.string(),
 		content: v.string(),
@@ -69,9 +70,9 @@ export default defineSchema({
 	characters: defineTable({
 		name: v.string(),
 		description: v.optional(v.string()),
-		playerId: v.optional(v.id("users")),
+		playerId: v.id("users"),
+		campaignId: v.id("campaigns"),
 		locationId: v.optional(v.id("locations")),
-		campaignId: v.optional(v.id("campaigns")),
 		avatarUrl: v.optional(v.string()),
 		status: v.optional(v.union(v.literal("active"), v.literal("inactive"), v.literal("dead"), v.literal("retired"))),
 		updatedAt: v.optional(v.number()),
@@ -79,7 +80,8 @@ export default defineSchema({
 		.index("by_campaignId", ["campaignId"])
 		.index("by_playerId", ["playerId"])
 		.index("by_locationId", ["locationId"])
-		.index("by_campaignId_and_locationId", ["campaignId", "locationId"]),
+		.index("by_campaignId_and_locationId", ["campaignId", "locationId"])
+		.index("by_playerId_and_campaignId", ["playerId", "campaignId"]),
 	factions: defineTable({
 		name: v.string(),
 		description: v.optional(v.string()),

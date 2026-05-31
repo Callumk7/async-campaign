@@ -6,7 +6,6 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { useAuth } from "~/components/auth/auth-provider";
 import { Header } from "~/components/navigation/header";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
@@ -40,7 +39,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	const { clearSelectedUser, selectedUser, isAuthenticated } = useAuth();
 	return (
 		<html lang="en">
 			<head>
