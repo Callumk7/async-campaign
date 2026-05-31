@@ -20,10 +20,6 @@ function RouteComponent() {
 		convexQuery(api.trees.getTrees, { campaignId }),
 	);
 
-	const createNode = useMutation({
-		mutationFn: useConvexMutation(api.decisionNodes.createDecisionNode),
-	});
-
 	return (
 		<div>
 			<h1>Decision Node Management</h1>

@@ -1,11 +1,5 @@
-import { createFileRoute, type LinkProps } from "@tanstack/react-router";
-import {
-	Card,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "~/components/ui/card";
+import { createFileRoute } from "@tanstack/react-router";
+import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 
 export const Route = createFileRoute("/")({ component: Home });
