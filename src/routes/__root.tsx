@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { useAuth } from "#/components/auth/auth-provider";
-import { Link } from "#/components/ui/link";
+import { Header } from "#/components/navigation/header";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
@@ -47,20 +47,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<nav className="flex flex-wrap items-center gap-3 bg-slate-900 p-3 text-white">
-					<Link to="/">Home</Link>
-					<Link to="/campaigns">Campaigns</Link>
-					<Link to="/users">Users</Link>
-					<span className="ml-auto text-sm text-slate-300">
-						{selectedUser?.name ??
-							(isAuthenticated ? "Loading user..." : "Guest")}
-					</span>
-					{isAuthenticated && (
-						<button type="button" onClick={clearSelectedUser}>
-							Logout
-						</button>
-					)}
-				</nav>
+				<Header />
 				{children}
 				<TanStackDevtools
 					config={{
