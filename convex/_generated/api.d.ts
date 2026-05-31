@@ -18,6 +18,7 @@ import type * as factions from "../factions.js";
 import type * as locations from "../locations.js";
 import type * as messages from "../messages.js";
 import type * as notes from "../notes.js";
+import type * as trees from "../trees.js";
 import type * as users from "../users.js";
 
 import type {
@@ -37,6 +38,7 @@ declare const fullApi: ApiFromModules<{
   locations: typeof locations;
   messages: typeof messages;
   notes: typeof notes;
+  trees: typeof trees;
   users: typeof users;
 }>;
 

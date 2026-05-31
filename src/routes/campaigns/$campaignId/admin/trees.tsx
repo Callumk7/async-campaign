@@ -9,7 +9,7 @@ import { Link } from "~/components/ui/link";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
 
-export const Route = createFileRoute("/campaigns/$campaignId/admin/nodes")({
+export const Route = createFileRoute("/campaigns/$campaignId/admin/trees")({
 	component: RouteComponent,
 });
 
@@ -19,11 +19,6 @@ function RouteComponent() {
 	const { data: trees } = useQuery(
 		convexQuery(api.trees.getTrees, { campaignId }),
 	);
-
-	const createNode = useMutation({
-		mutationFn: useConvexMutation(api.decisionNodes.createDecisionNode),
-	});
-
 	return (
 		<div>
 			<h1>Decision Node Management</h1>
@@ -31,8 +26,8 @@ function RouteComponent() {
 				{trees?.map((tree) => (
 					<div key={tree._id}>
 						<Link
-							to="/campaigns/$campaignId/admin/nodes/$nodeId"
-							params={{ nodeId: tree._id, campaignId }}
+							to="/campaigns/$campaignId/admin/trees/$treeId"
+							params={{ treeId: tree._id, campaignId }}
 						>
 							{tree.name}
 						</Link>

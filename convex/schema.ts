@@ -60,13 +60,22 @@ export default defineSchema({
 		content: v.string(),
 		campaignId: v.id("campaigns"),
 		parentDecisionNodeId: v.optional(v.id("decisionNodes")),
+		decisionTreeId: v.optional(v.id("decisionTrees")),
 		status: v.optional(decisionNodeStatus),
 		order: v.optional(v.number()),
 		updatedAt: v.optional(v.number()),
 	})
 		.index("by_campaignId", ["campaignId"])
 		.index("by_campaignId_and_parentDecisionNodeId", ["campaignId", "parentDecisionNodeId"])
-		.index("by_campaignId_and_status", ["campaignId", "status"]),
+		.index("by_campaignId_and_status", ["campaignId", "status"])
+		.index("by_decisionTreeId", ["decisionTreeId"])
+		.index("by_campaignId_and_decisionTreeId", ["campaignId", "decisionTreeId"]),
+	decisionTrees: defineTable({
+		name: v.string(),
+		description: v.optional(v.string()),
+		campaignId: v.id("campaigns"),
+		parentDecisionTreeId: v.optional(v.id("decisionTrees")),
+	}).index("by_campaignId", ["campaignId"]),
 	characters: defineTable({
 		name: v.string(),
 		description: v.optional(v.string()),

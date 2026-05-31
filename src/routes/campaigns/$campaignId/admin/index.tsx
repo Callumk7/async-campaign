@@ -145,6 +145,9 @@ function RouteComponent() {
 					<Link to="/campaigns/$campaignId/admin/nodes" params={{ campaignId }}>
 						Nodes
 					</Link>
+					<Link to="/campaigns/$campaignId/admin/trees" params={{ campaignId }}>
+						Trees
+					</Link>
 					<p className="mt-4 text-sm uppercase tracking-wide">Admin</p>
 					<h1 className="text-3xl font-bold">Manage {data.campaign.name}</h1>
 					<p className="">Edit campaign details and add users to the roster.</p>
