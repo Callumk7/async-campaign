@@ -25,7 +25,7 @@ function RouteComponent() {
 
 	return (
 		<div>
-			<nav className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-6 py-3 text-sm">
+			<nav className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3 text-sm">
 				<div className="flex flex-wrap items-center gap-4">
 					<Link to="/campaigns/$campaignId" params={{ campaignId }}>
 						Overview
@@ -37,7 +37,7 @@ function RouteComponent() {
 						Admin
 					</Link>
 				</div>
-				<div className="text-slate-600">
+				<div className="">
 					{currentCharacter ? (
 						<span>Playing as {currentCharacter.name}</span>
 					) : membership?.activeCharacterId ? (

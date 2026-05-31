@@ -40,7 +40,7 @@ function RouteComponent() {
 				<div className="flex flex-col gap-2">
 					<Link to="/campaigns">← Back to campaigns</Link>
 					<h1 className="text-3xl font-bold">Create a campaign</h1>
-					<p className="text-sm text-neutral-600">
+					<p className="text-sm">
 						Start a new campaign. You will be set as the campaign admin.
 					</p>
 					{canCreateCampaign ? null : (

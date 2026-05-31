@@ -6,5 +6,5 @@ export const Route = createFileRoute("/campaigns/$campaignId/chat")({
 
 function RouteComponent() {
 	// TODO: Implement chat
-	return <div>Hello "/campaigns/$campaignId/chat"!</div>;
+	return <div>Hello"/campaigns/$campaignId/chat"!</div>;
 }

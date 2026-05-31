@@ -121,7 +121,7 @@ function RouteComponent() {
 					<Link to="/campaigns/$campaignId" params={{ campaignId }}>
 						← Back to campaign
 					</Link>
-					<div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5 text-amber-800">
+					<div className="mt-6 rounded-xl border p-5">
 						You must be a campaign admin or DM to manage this campaign.
 					</div>
 				</main>
@@ -136,29 +136,17 @@ function RouteComponent() {
 					<Link to="/campaigns/$campaignId" params={{ campaignId }}>
 						← Back to campaign
 					</Link>
-					<p className="mt-4 text-sm uppercase tracking-wide text-slate-500">
-						Admin
-					</p>
-					<h1 className="text-3xl font-bold text-slate-950">
-						Manage {data.campaign.name}
-					</h1>
-					<p className="text-slate-600">
-						Edit campaign details and add users to the roster.
-					</p>
+					<p className="mt-4 text-sm uppercase tracking-wide">Admin</p>
+					<h1 className="text-3xl font-bold">Manage {data.campaign.name}</h1>
+					<p className="">Edit campaign details and add users to the roster.</p>
 				</div>
 
-				{message ? (
-					<p className="rounded border border-green-200 bg-green-50 p-3 text-green-700">
-						{message}
-					</p>
-				) : null}
+				{message ? <p className="rounded border p-3">{message}</p> : null}
 				{error ? (
-					<FieldError className="rounded border border-red-200 bg-red-50 p-3">
-						{error}
-					</FieldError>
+					<FieldError className="rounded border p-3">{error}</FieldError>
 				) : null}
 
-				<section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+				<section className="rounded-xl border p-5 shadow-sm">
 					<h2 className="mb-4 text-xl font-semibold">Campaign details</h2>
 					<Form
 						onSubmit={async (event) => {
@@ -214,10 +202,10 @@ function RouteComponent() {
 					</Form>
 				</section>
 
-				<section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+				<section className="rounded-xl border p-5 shadow-sm">
 					<h2 className="mb-4 text-xl font-semibold">Add user</h2>
 					{usersAvailableToAdd.length === 0 ? (
-						<p className="text-sm text-slate-500">
+						<p className="text-sm">
 							Every user has already been added to this campaign.
 						</p>
 					) : (
@@ -284,20 +272,20 @@ function RouteComponent() {
 					)}
 				</section>
 
-				<section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+				<section className="rounded-xl border p-5 shadow-sm">
 					<h2 className="mb-4 text-xl font-semibold">Campaign members</h2>
 					<ul className="flex flex-col gap-3">
 						{data.membersWithUsers.map((row) => (
 							<li
 								key={row.membership._id}
-								className="flex flex-wrap items-center justify-between gap-3 rounded border border-slate-200 p-3"
+								className="flex flex-wrap items-center justify-between gap-3 rounded border p-3"
 							>
 								<div>
-									<p className="font-medium text-slate-950">
+									<p className="font-medium">
 										{row.user?.name ?? "Deleted user"}
 									</p>
-									<p className="text-sm text-slate-500">
-										{row.user?.email ?? "No email"} · active character:{" "}
+									<p className="text-sm">
+										{row.user?.email ?? "No email"} · active character:{""}
 										{row.activeCharacter?.name ?? "none"}
 									</p>
 								</div>

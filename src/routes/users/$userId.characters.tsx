@@ -25,28 +25,25 @@ function RouteComponent() {
 		<main className="mx-auto flex max-w-3xl flex-col gap-6 p-6">
 			<div>
 				<Link to="/users">← Back to users</Link>
-				<h1 className="mt-4 text-3xl font-bold text-slate-950">Characters</h1>
-				<p className="text-slate-600">
+				<h1 className="mt-4 text-3xl font-bold">Characters</h1>
+				<p className="">
 					Characters are now created inside a campaign after a user has been
 					added to that campaign.
 				</p>
 			</div>
 
 			{characters.length === 0 ? (
-				<p className="rounded border border-dashed border-slate-300 p-4 text-sm text-slate-500">
+				<p className="rounded border border-dashed p-4 text-sm">
 					This user has not created any campaign characters yet.
 				</p>
 			) : (
 				<ul className="flex flex-col gap-3">
 					{characters.map((character) => (
-						<li
-							key={character._id}
-							className="rounded border border-slate-200 bg-white p-4 shadow-sm"
-						>
+						<li key={character._id} className="rounded border p-4 shadow-sm">
 							<div className="flex flex-wrap items-center justify-between gap-3">
 								<div>
-									<p className="font-medium text-slate-950">{character.name}</p>
-									<p className="text-sm text-slate-500">
+									<p className="font-medium">{character.name}</p>
+									<p className="text-sm">
 										{character.description || "No description."}
 									</p>
 								</div>

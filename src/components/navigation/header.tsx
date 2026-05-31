@@ -27,9 +27,7 @@ export function Header() {
 							{selectedUser?.name ?? "No user selected"}
 						</Link>
 					</div>
-					<Button className="text-white" onClick={clearSelectedUser}>
-						Logout
-					</Button>
+					<Button onClick={clearSelectedUser}>Logout</Button>
 				</div>
 			)}
 		</nav>

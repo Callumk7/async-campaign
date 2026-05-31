@@ -3,6 +3,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAuth } from "~/components/auth/auth-provider";
 import { Authenticated } from "~/components/auth/autheticated";
+import { Badge } from "~/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
@@ -46,99 +48,106 @@ function RouteComponent() {
 		currentMembership?.membership.role === "admin" ||
 		currentMembership?.membership.role === "dm";
 
+	// TODO: Fix up this markup
+
 	return (
 		<Authenticated>
 			<main className="mx-auto flex max-w-6xl flex-col gap-6 p-6">
-				<section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-					<div className="flex flex-wrap items-start justify-between gap-4">
-						<div>
+				<Card>
+					<CardHeader>
+						<div className="flex flex-wrap items-start justify-between gap-4">
+							<CardTitle>{data.campaign.name}</CardTitle>
 							<Link to="/campaigns">← Back to campaigns</Link>
-							<p className="mt-4 text-sm uppercase tracking-wide text-slate-500">
-								Campaign
-							</p>
-							<h1 className="text-3xl font-bold text-slate-950">
-								{data.campaign.name}
-							</h1>
-							<p className="mt-2 max-w-2xl text-slate-600">
-								{data.campaign.description || "No description yet."}
-							</p>
 						</div>
-						<span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
-							{data.campaign.status ?? "active"}
-						</span>
-					</div>
-				</section>
+					</CardHeader>
+					<CardContent>
+						<div className="flex flex-wrap items-start justify-between gap-4">
+							<div>
+								<p className="mt-2 max-w-2xl">
+									{data.campaign.description || "No description yet."}
+								</p>
+							</div>
+							<Badge>{data.campaign.status ?? "active"}</Badge>
+						</div>
+					</CardContent>
+				</Card>
 
 				<div className="grid gap-6 lg:grid-cols-[1fr_2fr]">
-					<section className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-						<h2 className="text-xl font-semibold text-slate-950">Your seat</h2>
-						{currentMembership ? (
-							<>
-								<p className="text-sm text-slate-600">
-									You are in this campaign as{" "}
-									{currentMembership.membership.role}.
-								</p>
-								{currentMembership.activeCharacter ? (
-									<div className="rounded-lg border border-green-200 bg-green-50 p-4">
-										<p className="text-sm text-green-700">Playing as</p>
-										<p className="font-semibold text-green-950">
-											{currentMembership.activeCharacter.name}
-										</p>
-									</div>
-								) : (
-									<p className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
-										Select a character before playing in this campaign.
+					<Card>
+						<CardHeader>
+							<CardTitle>Your seat</CardTitle>
+						</CardHeader>
+						<CardContent className="flex flex-col gap-4">
+							{currentMembership ? (
+								<>
+									<p className="text-sm">
+										You are in this campaign as{" "}
+										{currentMembership.membership.role}.
 									</p>
-								)}
-								<Link
-									to="/campaigns/$campaignId/login"
-									params={{ campaignId }}
-									className="rounded-md bg-blue-600 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-700 hover:no-underline"
-								>
-									Create or choose character
-								</Link>
-							</>
-						) : (
-							<p className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
-								Ask a campaign admin to add you before creating a character.
-							</p>
-						)}
-						{canManage ? (
-							<Link to="/campaigns/$campaignId/admin" params={{ campaignId }}>
-								Manage campaign
-							</Link>
-						) : null}
-					</section>
-
-					<section className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-						<div className="flex items-center justify-between gap-3">
-							<h2 className="text-xl font-semibold text-slate-950">Roster</h2>
-							<span className="text-sm text-slate-500">
-								{data.membersWithUsers.length} members ·{" "}
-								{data.characters.length} characters
-							</span>
-						</div>
-						{data.membersWithUsers.length === 0 ? (
-							<p className="text-sm text-slate-500">No users added yet.</p>
-						) : (
-							<ul className="grid gap-3 md:grid-cols-2">
-								{data.membersWithUsers.map((row) => (
-									<li
-										key={row.membership._id}
-										className="rounded-lg border border-slate-200 p-3"
+									{currentMembership.activeCharacter ? (
+										<div className="rounded-lg border p-4">
+											<p className="text-sm">Playing as</p>
+											<p className="font-semibold">
+												{currentMembership.activeCharacter.name}
+											</p>
+										</div>
+									) : (
+										<p className="rounded-lg border p-4 text-sm">
+											Select a character before playing in this campaign.
+										</p>
+									)}
+									<Link
+										variant="default"
+										to="/campaigns/$campaignId/login"
+										params={{ campaignId }}
 									>
-										<p className="font-medium text-slate-950">
-											{row.user?.name ?? "Deleted user"}
-										</p>
-										<p className="text-sm text-slate-500">
-											{row.membership.role} ·{" "}
-											{row.activeCharacter?.name ?? "no character selected"}
-										</p>
-									</li>
-								))}
-							</ul>
-						)}
-					</section>
+										Create or choose character
+									</Link>
+								</>
+							) : (
+								<p className="rounded-lg border p-4 text-sm">
+									Ask a campaign admin to add you before creating a character.
+								</p>
+							)}
+							{canManage ? (
+								<Link to="/campaigns/$campaignId/admin" params={{ campaignId }}>
+									Manage campaign
+								</Link>
+							) : null}
+						</CardContent>
+					</Card>
+
+					<Card>
+						<CardContent className="flex flex-col gap-4">
+							<div className="flex items-center justify-between gap-3">
+								<h2 className="text-xl font-semibold">Roster</h2>
+								<span className="text-sm">
+									{data.membersWithUsers.length} members ·{""}
+									{data.characters.length} characters
+								</span>
+							</div>
+							{data.membersWithUsers.length === 0 ? (
+								<p className="text-sm">No users added yet.</p>
+							) : (
+								<ul className="grid gap-3 md:grid-cols-2">
+									{data.membersWithUsers.map((row) => (
+										<li
+											key={row.membership._id}
+											className="rounded-lg border p-3"
+										>
+											<p className="font-medium">
+												{row.user?.name ?? "Deleted user"}
+											</p>
+											<p className="text-sm">
+												{row.membership.role} ·{""}
+												{row.activeCharacter?.name ?? "no character selected"}
+											</p>
+										</li>
+									))}
+								</ul>
+							)}
+						</CardContent>
+					</Card>
 				</div>
 			</main>
 		</Authenticated>

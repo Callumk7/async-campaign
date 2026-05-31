@@ -9,7 +9,7 @@ import * as React from "react";
 import { Authenticated } from "~/components/auth/autheticated";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Field, Form, Label } from "~/components/ui/form";
+import { Field, FieldGroup, FieldLabel } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import {
 	Item,
@@ -58,11 +58,9 @@ function RouteComponent() {
 		<Authenticated>
 			<main className="mx-auto flex max-w-4xl flex-col gap-6 p-6">
 				<div>
-					<p className="text-sm uppercase tracking-wide text-slate-500">
-						CRUD route
-					</p>
-					<h1 className="text-3xl font-bold text-slate-950">Users</h1>
-					<p className="text-slate-600">
+					<p className="text-sm uppercase tracking-wide">CRUD route</p>
+					<h1 className="text-3xl font-bold">Users</h1>
+					<p className="">
 						Create, rename, change roles, and delete user records.
 					</p>
 				</div>
@@ -72,7 +70,7 @@ function RouteComponent() {
 						<CardTitle>Create user</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<Form
+						<form
 							onSubmit={async (event) => {
 								event.preventDefault();
 								if (!name.trim()) return;
@@ -86,10 +84,11 @@ function RouteComponent() {
 								setRole("player");
 								await refresh();
 							}}
+							className="flex flex-col gap-4"
 						>
-							<div className="grid gap-4 md:grid-cols-3">
+							<FieldGroup className="grid gap-4 md:grid-cols-3">
 								<Field>
-									<Label htmlFor="user-name">Name</Label>
+									<FieldLabel htmlFor="user-name">Name</FieldLabel>
 									<Input
 										id="user-name"
 										value={name}
@@ -98,7 +97,7 @@ function RouteComponent() {
 									/>
 								</Field>
 								<Field>
-									<Label htmlFor="user-email">Email</Label>
+									<FieldLabel htmlFor="user-email">Email</FieldLabel>
 									<Input
 										id="user-email"
 										type="email"
@@ -107,7 +106,7 @@ function RouteComponent() {
 									/>
 								</Field>
 								<Field>
-									<Label htmlFor="user-role">Role</Label>
+									<FieldLabel htmlFor="user-role">Role</FieldLabel>
 									<Select
 										id="user-role"
 										value={role}
@@ -120,11 +119,11 @@ function RouteComponent() {
 										<option value="admin">Admin</option>
 									</Select>
 								</Field>
-							</div>
+							</FieldGroup>
 							<Button type="submit" disabled={createUser.isPending}>
 								{createUser.isPending ? "Creating..." : "Create user"}
 							</Button>
-						</Form>
+						</form>
 					</CardContent>
 				</Card>
 
@@ -133,9 +132,7 @@ function RouteComponent() {
 						<CardTitle>Existing users</CardTitle>
 					</CardHeader>
 					<CardContent>
-						{users.length === 0 ? (
-							<p className="text-slate-500">No users yet.</p>
-						) : null}
+						{users.length === 0 ? <p className="">No users yet.</p> : null}
 						<ItemGroup>
 							{users.map((user) => (
 								<Item key={user._id} variant="outline">

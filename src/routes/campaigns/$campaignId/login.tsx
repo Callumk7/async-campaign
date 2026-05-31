@@ -103,7 +103,7 @@ function RouteComponent() {
 						← Back to campaign
 					</Link>
 					<h1 className="mt-4 text-3xl font-bold">Choose your character</h1>
-					<p className="text-sm text-slate-600">
+					<p className="text-sm">
 						{campaign
 							? `Create or select who you will play in ${campaign.name}.`
 							: "Create or select who you will play in this campaign."}
@@ -111,36 +111,32 @@ function RouteComponent() {
 				</div>
 
 				{membership === null ? (
-					<p className="rounded border border-amber-200 bg-amber-50 p-3 text-amber-700">
+					<p className="rounded border p-3">
 						You are not a member of this campaign yet. Ask an admin to add you
 						before creating a character.
 					</p>
 				) : null}
 
 				{selectedCharacterBelongsToCampaign ? (
-					<p className="rounded border border-green-200 bg-green-50 p-3 text-green-700">
+					<p className="rounded border p-3">
 						Current character: {selectedCharacter.name}
 					</p>
 				) : null}
 
 				{membership?.activeCharacterId &&
 				!selectedCharacterBelongsToCampaign ? (
-					<p className="rounded border border-blue-200 bg-blue-50 p-3 text-blue-700">
+					<p className="rounded border p-3">
 						You already have a character selected for this campaign. Choose a
 						character below to update this browser session.
 					</p>
 				) : null}
 
 				{error ? (
-					<FieldError className="rounded border border-red-200 bg-red-50 p-3">
-						{error}
-					</FieldError>
+					<FieldError className="rounded border p-3">{error}</FieldError>
 				) : null}
 
-				<section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-					<h2 className="text-xl font-semibold text-slate-950">
-						Create a campaign character
-					</h2>
+				<section className="rounded-xl border p-5 shadow-sm">
+					<h2 className="text-xl font-semibold">Create a campaign character</h2>
 					<Form
 						onSubmit={async (event) => {
 							event.preventDefault();
@@ -209,13 +205,11 @@ function RouteComponent() {
 					</Form>
 				</section>
 
-				<section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-					<h2 className="text-xl font-semibold text-slate-950">
-						Your campaign characters
-					</h2>
+				<section className="rounded-xl border p-5 shadow-sm">
+					<h2 className="text-xl font-semibold">Your campaign characters</h2>
 					{isCharactersLoading ? <p>Loading characters...</p> : null}
 					{!isCharactersLoading && playerCharacters.length === 0 ? (
-						<p className="text-sm text-slate-500">
+						<p className="text-sm">
 							You do not have any characters in this campaign yet.
 						</p>
 					) : (
@@ -223,13 +217,11 @@ function RouteComponent() {
 							{playerCharacters.map((character) => (
 								<li
 									key={character._id}
-									className="flex items-center justify-between gap-3 rounded border border-slate-200 p-3"
+									className="flex items-center justify-between gap-3 rounded border p-3"
 								>
 									<div>
-										<p className="font-medium text-slate-950">
-											{character.name}
-										</p>
-										<p className="text-sm text-slate-500">
+										<p className="font-medium">{character.name}</p>
+										<p className="text-sm">
 											{character.description || "No description."}
 										</p>
 									</div>

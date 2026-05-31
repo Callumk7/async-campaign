@@ -40,7 +40,7 @@ function RouteComponent() {
 			<main className="mx-auto flex max-w-5xl flex-col gap-6 p-6">
 				<div className="flex flex-wrap items-start justify-between gap-4">
 					<div>
-						<h1 className="text-3xl font-bold text-slate-950">Campaigns</h1>
+						<h1 className="text-3xl font-bold">Campaigns</h1>
 						<p>Create campaigns and open one to test child CRUD functions.</p>
 					</div>
 					{canCreateCampaign ? (
@@ -55,7 +55,7 @@ function RouteComponent() {
 				</div>
 
 				{data.length === 0 ? (
-					<Empty className="border border-dashed border-slate-300 text-slate-500">
+					<Empty className="border border-dashed">
 						<EmptyDescription>
 							No campaigns yet. Create one to unlock the campaign workbench.
 						</EmptyDescription>
@@ -68,7 +68,7 @@ function RouteComponent() {
 									<CardTitle>{campaign.name}</CardTitle>
 								</CardHeader>
 								<CardContent className="flex flex-1 flex-col gap-3">
-									<p className="line-clamp-3 text-sm text-slate-600">
+									<p className="line-clamp-3 text-sm">
 										{campaign.description || "No description."}
 									</p>
 									<div className="mt-auto flex items-center justify-between gap-3">
