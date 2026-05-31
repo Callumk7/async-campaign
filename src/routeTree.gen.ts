@@ -19,6 +19,9 @@ import { Route as CampaignsCampaignIdRouteRouteImport } from './routes/campaigns
 import { Route as CampaignsCampaignIdIndexRouteImport } from './routes/campaigns/$campaignId/index'
 import { Route as UsersUserIdCharactersRouteImport } from './routes/users/$userId.characters'
 import { Route as CampaignsCampaignIdLoginRouteImport } from './routes/campaigns/$campaignId/login'
+import { Route as CampaignsCampaignIdChatRouteImport } from './routes/campaigns/$campaignId/chat'
+import { Route as CampaignsCampaignIdAdminRouteRouteImport } from './routes/campaigns/$campaignId/admin/route'
+import { Route as CampaignsCampaignIdAdminIndexRouteImport } from './routes/campaigns/$campaignId/admin/index'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -73,6 +76,23 @@ const CampaignsCampaignIdLoginRoute =
     path: '/login',
     getParentRoute: () => CampaignsCampaignIdRouteRoute,
   } as any)
+const CampaignsCampaignIdChatRoute = CampaignsCampaignIdChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => CampaignsCampaignIdRouteRoute,
+} as any)
+const CampaignsCampaignIdAdminRouteRoute =
+  CampaignsCampaignIdAdminRouteRouteImport.update({
+    id: '/admin',
+    path: '/admin',
+    getParentRoute: () => CampaignsCampaignIdRouteRoute,
+  } as any)
+const CampaignsCampaignIdAdminIndexRoute =
+  CampaignsCampaignIdAdminIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => CampaignsCampaignIdAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -82,9 +102,12 @@ export interface FileRoutesByFullPath {
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/users/': typeof UsersIndexRoute
+  '/campaigns/$campaignId/admin': typeof CampaignsCampaignIdAdminRouteRouteWithChildren
+  '/campaigns/$campaignId/chat': typeof CampaignsCampaignIdChatRoute
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
   '/campaigns/$campaignId/': typeof CampaignsCampaignIdIndexRoute
+  '/campaigns/$campaignId/admin/': typeof CampaignsCampaignIdAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -92,9 +115,11 @@ export interface FileRoutesByTo {
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns': typeof CampaignsIndexRoute
   '/users': typeof UsersIndexRoute
+  '/campaigns/$campaignId/chat': typeof CampaignsCampaignIdChatRoute
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdIndexRoute
+  '/campaigns/$campaignId/admin': typeof CampaignsCampaignIdAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -105,9 +130,12 @@ export interface FileRoutesById {
   '/campaigns/new': typeof CampaignsNewRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/users/': typeof UsersIndexRoute
+  '/campaigns/$campaignId/admin': typeof CampaignsCampaignIdAdminRouteRouteWithChildren
+  '/campaigns/$campaignId/chat': typeof CampaignsCampaignIdChatRoute
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
   '/campaigns/$campaignId/': typeof CampaignsCampaignIdIndexRoute
+  '/campaigns/$campaignId/admin/': typeof CampaignsCampaignIdAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -119,9 +147,12 @@ export interface FileRouteTypes {
     | '/campaigns/new'
     | '/campaigns/'
     | '/users/'
+    | '/campaigns/$campaignId/admin'
+    | '/campaigns/$campaignId/chat'
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
     | '/campaigns/$campaignId/'
+    | '/campaigns/$campaignId/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -129,9 +160,11 @@ export interface FileRouteTypes {
     | '/campaigns/new'
     | '/campaigns'
     | '/users'
+    | '/campaigns/$campaignId/chat'
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
     | '/campaigns/$campaignId'
+    | '/campaigns/$campaignId/admin'
   id:
     | '__root__'
     | '/'
@@ -141,9 +174,12 @@ export interface FileRouteTypes {
     | '/campaigns/new'
     | '/campaigns/'
     | '/users/'
+    | '/campaigns/$campaignId/admin'
+    | '/campaigns/$campaignId/chat'
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
     | '/campaigns/$campaignId/'
+    | '/campaigns/$campaignId/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -227,6 +263,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignsCampaignIdLoginRouteImport
       parentRoute: typeof CampaignsCampaignIdRouteRoute
     }
+    '/campaigns/$campaignId/chat': {
+      id: '/campaigns/$campaignId/chat'
+      path: '/chat'
+      fullPath: '/campaigns/$campaignId/chat'
+      preLoaderRoute: typeof CampaignsCampaignIdChatRouteImport
+      parentRoute: typeof CampaignsCampaignIdRouteRoute
+    }
+    '/campaigns/$campaignId/admin': {
+      id: '/campaigns/$campaignId/admin'
+      path: '/admin'
+      fullPath: '/campaigns/$campaignId/admin'
+      preLoaderRoute: typeof CampaignsCampaignIdAdminRouteRouteImport
+      parentRoute: typeof CampaignsCampaignIdRouteRoute
+    }
+    '/campaigns/$campaignId/admin/': {
+      id: '/campaigns/$campaignId/admin/'
+      path: '/'
+      fullPath: '/campaigns/$campaignId/admin/'
+      preLoaderRoute: typeof CampaignsCampaignIdAdminIndexRouteImport
+      parentRoute: typeof CampaignsCampaignIdAdminRouteRoute
+    }
   }
 }
 
@@ -244,13 +301,32 @@ const UsersRouteRouteWithChildren = UsersRouteRoute._addFileChildren(
   UsersRouteRouteChildren,
 )
 
+interface CampaignsCampaignIdAdminRouteRouteChildren {
+  CampaignsCampaignIdAdminIndexRoute: typeof CampaignsCampaignIdAdminIndexRoute
+}
+
+const CampaignsCampaignIdAdminRouteRouteChildren: CampaignsCampaignIdAdminRouteRouteChildren =
+  {
+    CampaignsCampaignIdAdminIndexRoute: CampaignsCampaignIdAdminIndexRoute,
+  }
+
+const CampaignsCampaignIdAdminRouteRouteWithChildren =
+  CampaignsCampaignIdAdminRouteRoute._addFileChildren(
+    CampaignsCampaignIdAdminRouteRouteChildren,
+  )
+
 interface CampaignsCampaignIdRouteRouteChildren {
+  CampaignsCampaignIdAdminRouteRoute: typeof CampaignsCampaignIdAdminRouteRouteWithChildren
+  CampaignsCampaignIdChatRoute: typeof CampaignsCampaignIdChatRoute
   CampaignsCampaignIdLoginRoute: typeof CampaignsCampaignIdLoginRoute
   CampaignsCampaignIdIndexRoute: typeof CampaignsCampaignIdIndexRoute
 }
 
 const CampaignsCampaignIdRouteRouteChildren: CampaignsCampaignIdRouteRouteChildren =
   {
+    CampaignsCampaignIdAdminRouteRoute:
+      CampaignsCampaignIdAdminRouteRouteWithChildren,
+    CampaignsCampaignIdChatRoute: CampaignsCampaignIdChatRoute,
     CampaignsCampaignIdLoginRoute: CampaignsCampaignIdLoginRoute,
     CampaignsCampaignIdIndexRoute: CampaignsCampaignIdIndexRoute,
   }
