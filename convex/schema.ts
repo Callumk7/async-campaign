@@ -39,8 +39,6 @@ export default defineSchema({
 		status: v.optional(campaignStatus),
 		currentDecisionNodeId: v.optional(v.id("decisionNodes")),
 		coverImageUrl: v.optional(v.string()),
-		// Prefer campaignMembers for membership; kept optional for existing data compatibility.
-		members: v.optional(v.array(v.id("characters"))),
 		updatedAt: v.optional(v.number()),
 	})
 		.index("by_ownerId", ["ownerId"])

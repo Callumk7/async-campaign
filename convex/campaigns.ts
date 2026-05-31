@@ -98,7 +98,6 @@ export const createCampaign = mutation({
 		status: v.optional(campaignStatus),
 		currentDecisionNodeId: v.optional(v.id("decisionNodes")),
 		coverImageUrl: v.optional(v.string()),
-		members: v.optional(v.array(v.id("characters"))),
 	},
 	handler: async (ctx, args) => {
 		return await ctx.db.insert("campaigns", {
@@ -108,7 +107,6 @@ export const createCampaign = mutation({
 			status: args.status ?? "active",
 			currentDecisionNodeId: args.currentDecisionNodeId,
 			coverImageUrl: args.coverImageUrl,
-			members: args.members,
 			updatedAt: Date.now(),
 		});
 	},
