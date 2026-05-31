@@ -9,6 +9,7 @@ import * as React from "react";
 import { useAuth } from "~/components/auth/auth-provider";
 import { Authenticated } from "~/components/auth/autheticated";
 import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
 	Field,
 	FieldError,
@@ -21,7 +22,6 @@ import { NativeSelect as Select } from "~/components/ui/native-select";
 import { Textarea } from "~/components/ui/textarea";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 type CampaignRole = "admin" | "dm" | "player" | "observer";
 type CampaignStatus = "active" | "paused" | "archived";
@@ -141,6 +141,9 @@ function RouteComponent() {
 				<div>
 					<Link to="/campaigns/$campaignId" params={{ campaignId }}>
 						← Back to campaign
+					</Link>
+					<Link to="/campaigns/$campaignId/admin/nodes" params={{ campaignId }}>
+						Nodes
 					</Link>
 					<p className="mt-4 text-sm uppercase tracking-wide">Admin</p>
 					<h1 className="text-3xl font-bold">Manage {data.campaign.name}</h1>

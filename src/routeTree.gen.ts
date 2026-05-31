@@ -25,6 +25,7 @@ import { Route as CampaignsCampaignIdPlayersRouteRouteImport } from './routes/ca
 import { Route as CampaignsCampaignIdAdminRouteRouteImport } from './routes/campaigns/$campaignId/admin/route'
 import { Route as CampaignsCampaignIdAdminIndexRouteImport } from './routes/campaigns/$campaignId/admin/index'
 import { Route as CampaignsCampaignIdPlayersAddRouteImport } from './routes/campaigns/$campaignId/players/add'
+import { Route as CampaignsCampaignIdAdminNodesRouteImport } from './routes/campaigns/$campaignId/admin/nodes'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -113,6 +114,12 @@ const CampaignsCampaignIdPlayersAddRoute =
     path: '/add',
     getParentRoute: () => CampaignsCampaignIdPlayersRouteRoute,
   } as any)
+const CampaignsCampaignIdAdminNodesRoute =
+  CampaignsCampaignIdAdminNodesRouteImport.update({
+    id: '/nodes',
+    path: '/nodes',
+    getParentRoute: () => CampaignsCampaignIdAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
   '/campaigns/$campaignId/': typeof CampaignsCampaignIdIndexRoute
+  '/campaigns/$campaignId/admin/nodes': typeof CampaignsCampaignIdAdminNodesRoute
   '/campaigns/$campaignId/players/add': typeof CampaignsCampaignIdPlayersAddRoute
   '/campaigns/$campaignId/admin/': typeof CampaignsCampaignIdAdminIndexRoute
 }
@@ -144,6 +152,7 @@ export interface FileRoutesByTo {
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdIndexRoute
+  '/campaigns/$campaignId/admin/nodes': typeof CampaignsCampaignIdAdminNodesRoute
   '/campaigns/$campaignId/players/add': typeof CampaignsCampaignIdPlayersAddRoute
   '/campaigns/$campaignId/admin': typeof CampaignsCampaignIdAdminIndexRoute
 }
@@ -163,6 +172,7 @@ export interface FileRoutesById {
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
   '/campaigns/$campaignId/': typeof CampaignsCampaignIdIndexRoute
+  '/campaigns/$campaignId/admin/nodes': typeof CampaignsCampaignIdAdminNodesRoute
   '/campaigns/$campaignId/players/add': typeof CampaignsCampaignIdPlayersAddRoute
   '/campaigns/$campaignId/admin/': typeof CampaignsCampaignIdAdminIndexRoute
 }
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
     | '/campaigns/$campaignId/'
+    | '/campaigns/$campaignId/admin/nodes'
     | '/campaigns/$campaignId/players/add'
     | '/campaigns/$campaignId/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
     | '/campaigns/$campaignId'
+    | '/campaigns/$campaignId/admin/nodes'
     | '/campaigns/$campaignId/players/add'
     | '/campaigns/$campaignId/admin'
   id:
@@ -216,6 +228,7 @@ export interface FileRouteTypes {
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
     | '/campaigns/$campaignId/'
+    | '/campaigns/$campaignId/admin/nodes'
     | '/campaigns/$campaignId/players/add'
     | '/campaigns/$campaignId/admin/'
   fileRoutesById: FileRoutesById
@@ -343,6 +356,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignsCampaignIdPlayersAddRouteImport
       parentRoute: typeof CampaignsCampaignIdPlayersRouteRoute
     }
+    '/campaigns/$campaignId/admin/nodes': {
+      id: '/campaigns/$campaignId/admin/nodes'
+      path: '/nodes'
+      fullPath: '/campaigns/$campaignId/admin/nodes'
+      preLoaderRoute: typeof CampaignsCampaignIdAdminNodesRouteImport
+      parentRoute: typeof CampaignsCampaignIdAdminRouteRoute
+    }
   }
 }
 
@@ -363,11 +383,13 @@ const UsersRouteRouteWithChildren = UsersRouteRoute._addFileChildren(
 )
 
 interface CampaignsCampaignIdAdminRouteRouteChildren {
+  CampaignsCampaignIdAdminNodesRoute: typeof CampaignsCampaignIdAdminNodesRoute
   CampaignsCampaignIdAdminIndexRoute: typeof CampaignsCampaignIdAdminIndexRoute
 }
 
 const CampaignsCampaignIdAdminRouteRouteChildren: CampaignsCampaignIdAdminRouteRouteChildren =
   {
+    CampaignsCampaignIdAdminNodesRoute: CampaignsCampaignIdAdminNodesRoute,
     CampaignsCampaignIdAdminIndexRoute: CampaignsCampaignIdAdminIndexRoute,
   }
 
