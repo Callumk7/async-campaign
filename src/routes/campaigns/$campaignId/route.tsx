@@ -30,9 +30,6 @@ function RouteComponent() {
 					<Link to="/campaigns/$campaignId" params={{ campaignId }}>
 						Overview
 					</Link>
-					<Link to="/campaigns/$campaignId/login" params={{ campaignId }}>
-						Choose character
-					</Link>
 					<Link to="/campaigns/$campaignId/admin" params={{ campaignId }}>
 						Admin
 					</Link>

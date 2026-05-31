@@ -21,6 +21,7 @@ import { NativeSelect as Select } from "~/components/ui/native-select";
 import { Textarea } from "~/components/ui/textarea";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 type CampaignRole = "admin" | "dm" | "player" | "observer";
 type CampaignStatus = "active" | "paused" | "archived";
@@ -151,64 +152,68 @@ function RouteComponent() {
 					<FieldError className="rounded border p-3">{error}</FieldError>
 				) : null}
 
-				<section className="rounded-xl border p-5 shadow-sm">
-					<h2 className="mb-4 text-xl font-semibold">Campaign details</h2>
-					<form
-						onSubmit={async (event) => {
-							event.preventDefault();
-							await run("Campaign", () =>
-								updateCampaign.mutateAsync({
-									id: campaignId,
-									name: name.trim(),
-									description: emptyToUndefined(description),
-									status,
-								}),
-							);
-						}}
-						className="flex flex-col gap-4"
-					>
-						<FieldGroup className="grid gap-4 md:grid-cols-3">
+				<Card>
+					<CardHeader>
+						<CardTitle>Campaign details</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<form
+							onSubmit={async (event) => {
+								event.preventDefault();
+								await run("Campaign", () =>
+									updateCampaign.mutateAsync({
+										id: campaignId,
+										name: name.trim(),
+										description: emptyToUndefined(description),
+										status,
+									}),
+								);
+							}}
+							className="flex flex-col gap-4"
+						>
+							<FieldGroup className="grid gap-4 md:grid-cols-3">
+								<Field>
+									<FieldLabel htmlFor="campaign-name">Name</FieldLabel>
+									<Input
+										id="campaign-name"
+										value={name}
+										onChange={(event) => setName(event.target.value)}
+										required
+									/>
+								</Field>
+								<Field>
+									<FieldLabel htmlFor="campaign-status">Status</FieldLabel>
+									<Select
+										id="campaign-status"
+										value={status}
+										onChange={(event) =>
+											setStatus(event.target.value as CampaignStatus)
+										}
+									>
+										<option value="active">Active</option>
+										<option value="paused">Paused</option>
+										<option value="archived">Archived</option>
+									</Select>
+								</Field>
+								<div className="flex items-end">
+									<Button type="submit" disabled={updateCampaign.isPending}>
+										{updateCampaign.isPending ? "Saving..." : "Save campaign"}
+									</Button>
+								</div>
+							</FieldGroup>
 							<Field>
-								<FieldLabel htmlFor="campaign-name">Name</FieldLabel>
-								<Input
-									id="campaign-name"
-									value={name}
-									onChange={(event) => setName(event.target.value)}
-									required
+								<FieldLabel htmlFor="campaign-description">
+									Description
+								</FieldLabel>
+								<Textarea
+									id="campaign-description"
+									value={description}
+									onChange={(event) => setDescription(event.target.value)}
 								/>
 							</Field>
-							<Field>
-								<FieldLabel htmlFor="campaign-status">Status</FieldLabel>
-								<Select
-									id="campaign-status"
-									value={status}
-									onChange={(event) =>
-										setStatus(event.target.value as CampaignStatus)
-									}
-								>
-									<option value="active">Active</option>
-									<option value="paused">Paused</option>
-									<option value="archived">Archived</option>
-								</Select>
-							</Field>
-							<div className="flex items-end">
-								<Button type="submit" disabled={updateCampaign.isPending}>
-									{updateCampaign.isPending ? "Saving..." : "Save campaign"}
-								</Button>
-							</div>
-						</FieldGroup>
-						<Field>
-							<FieldLabel htmlFor="campaign-description">
-								Description
-							</FieldLabel>
-							<Textarea
-								id="campaign-description"
-								value={description}
-								onChange={(event) => setDescription(event.target.value)}
-							/>
-						</Field>
-					</form>
-				</section>
+						</form>
+					</CardContent>
+				</Card>
 
 				<section className="rounded-xl border p-5 shadow-sm">
 					<h2 className="mb-4 text-xl font-semibold">Add user</h2>
