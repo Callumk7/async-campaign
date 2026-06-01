@@ -5,6 +5,9 @@ const userRole = v.union(v.literal("admin"), v.literal("dm"), v.literal("player"
 const campaignRole = v.union(v.literal("admin"), v.literal("dm"), v.literal("player"), v.literal("observer"));
 const campaignStatus = v.union(v.literal("active"), v.literal("paused"), v.literal("archived"));
 const decisionNodeStatus = v.union(v.literal("draft"), v.literal("active"), v.literal("resolved"), v.literal("archived"));
+const decisionOptionStatus = v.union(v.literal("draft"), v.literal("active"), v.literal("disabled"), v.literal("archived"));
+const decisionOptionAvailabilityStatus = v.union(v.literal("available"), v.literal("hidden"), v.literal("disabled"));
+const decisionOptionSelectionStatus = v.union(v.literal("selected"), v.literal("retracted"), v.literal("locked"));
 const visibility = v.union(v.literal("public"), v.literal("private"), v.literal("dm"));
 
 export default defineSchema({
@@ -70,6 +73,52 @@ export default defineSchema({
 		.index("by_campaignId_and_status", ["campaignId", "status"])
 		.index("by_decisionTreeId", ["decisionTreeId"])
 		.index("by_campaignId_and_decisionTreeId", ["campaignId", "decisionTreeId"]),
+	decisionOptions: defineTable({
+		decisionNodeId: v.id("decisionNodes"),
+		campaignId: v.id("campaigns"),
+		label: v.string(),
+		description: v.optional(v.string()),
+		outcomeDecisionNodeId: v.optional(v.id("decisionNodes")),
+		status: v.optional(decisionOptionStatus),
+		order: v.optional(v.number()),
+		updatedAt: v.optional(v.number()),
+	})
+		.index("by_campaignId", ["campaignId"])
+		.index("by_decisionNodeId", ["decisionNodeId"])
+		.index("by_campaignId_and_decisionNodeId", ["campaignId", "decisionNodeId"])
+		.index("by_decisionNodeId_and_status", ["decisionNodeId", "status"]),
+	decisionOptionAvailabilities: defineTable({
+		decisionOptionId: v.id("decisionOptions"),
+		decisionNodeId: v.id("decisionNodes"),
+		campaignId: v.id("campaigns"),
+		characterId: v.id("characters"),
+		status: v.optional(decisionOptionAvailabilityStatus),
+		reason: v.optional(v.string()),
+		updatedAt: v.optional(v.number()),
+	})
+		.index("by_decisionOptionId", ["decisionOptionId"])
+		.index("by_characterId", ["characterId"])
+		.index("by_decisionOptionId_and_characterId", ["decisionOptionId", "characterId"])
+		.index("by_decisionNodeId_and_characterId", ["decisionNodeId", "characterId"])
+		.index("by_campaignId_and_characterId", ["campaignId", "characterId"]),
+	decisionOptionSelections: defineTable({
+		decisionOptionId: v.id("decisionOptions"),
+		decisionNodeId: v.id("decisionNodes"),
+		campaignId: v.id("campaigns"),
+		characterId: v.id("characters"),
+		selectedByUserId: v.optional(v.id("users")),
+		status: v.optional(decisionOptionSelectionStatus),
+		note: v.optional(v.string()),
+		selectedAt: v.number(),
+		updatedAt: v.optional(v.number()),
+	})
+		.index("by_decisionOptionId", ["decisionOptionId"])
+		.index("by_characterId", ["characterId"])
+		.index("by_decisionNodeId", ["decisionNodeId"])
+		.index("by_decisionOptionId_and_characterId", ["decisionOptionId", "characterId"])
+		.index("by_decisionNodeId_and_characterId", ["decisionNodeId", "characterId"])
+		.index("by_decisionNodeId_and_status", ["decisionNodeId", "status"])
+		.index("by_campaignId_and_characterId", ["campaignId", "characterId"]),
 	decisionTrees: defineTable({
 		name: v.string(),
 		description: v.optional(v.string()),

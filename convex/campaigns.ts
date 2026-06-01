@@ -20,6 +20,30 @@ export const getCampaignsByOwner = query({
 	},
 });
 
+export const getByCampaignMember = query({
+	args: { userId: v.id("users") },
+	handler: async (ctx, args) => {
+		const memberships = await ctx.db
+			.query("campaignMembers")
+			.withIndex("by_userId", (q) => q.eq("userId", args.userId))
+			.take(50);
+
+		const campaignsWithMemberships = await Promise.all(
+			memberships.map(async (membership) => {
+				const campaign = await ctx.db.get(membership.campaignId);
+				if (!campaign) return null;
+
+				return {
+					campaign,
+					membership,
+				};
+			}),
+		);
+
+		return campaignsWithMemberships.filter((item) => item !== null);
+	},
+});
+
 export const getCampaignsByStatus = query({
 	args: { status: campaignStatus },
 	handler: async (ctx, args) => {

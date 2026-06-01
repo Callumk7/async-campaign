@@ -25,7 +25,7 @@ function RouteComponent() {
 	const [role, setRole] = React.useState<"admin" | "dm" | "player">("player");
 
 	return (
-		<main className="mx-auto flex max-w-2xl flex-col gap-6 p-8">
+		<main className="mx-auto w-full max-w-2xl flex flex-col gap-6 p-8">
 			<h1 className="text-3xl font-bold">Choose your user</h1>
 
 			<Card>

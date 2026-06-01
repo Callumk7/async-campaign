@@ -1,13 +1,8 @@
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
-import {
-	useMutation,
-	useQueryClient,
-	useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAuth } from "~/components/auth/auth-provider";
 import { Authenticated } from "~/components/auth/autheticated";
-import { Alert, AlertDescription } from "~/components/ui/alert";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -25,7 +20,6 @@ export const Route = createFileRoute("/campaigns/")({
 });
 
 function RouteComponent() {
-	const queryClient = useQueryClient();
 	const { selectedUser } = useAuth();
 	const campaignsQuery = convexQuery(api.campaigns.getCampaigns, {});
 	const { data } = useSuspenseQuery(campaignsQuery);
@@ -39,19 +33,11 @@ function RouteComponent() {
 		<Authenticated>
 			<main className="mx-auto flex max-w-5xl flex-col gap-6 p-6">
 				<div className="flex flex-wrap items-start justify-between gap-4">
-					<div>
-						<h1 className="text-3xl font-bold">Campaigns</h1>
-						<p>Create campaigns and open one to test child CRUD functions.</p>
-					</div>
 					{canCreateCampaign ? (
-						<Link to="/campaigns/new">Create new campaign</Link>
-					) : (
-						<Alert variant="destructive">
-							<AlertDescription>
-								Only admins and DMs can create campaigns.
-							</AlertDescription>
-						</Alert>
-					)}
+						<Link variant="default" to="/campaigns/new">
+							Create new campaign
+						</Link>
+					) : null}
 				</div>
 
 				{data.length === 0 ? (
@@ -86,13 +72,8 @@ function RouteComponent() {
 												type="button"
 												variant="destructive"
 												onClick={async () => {
-													if (!window.confirm(`Delete ${campaign.name}?`))
-														return;
 													await deleteCampaign.mutateAsync({
 														id: campaign._id,
-													});
-													await queryClient.invalidateQueries({
-														queryKey: campaignsQuery.queryKey,
 													});
 												}}
 											>

@@ -1,6 +1,11 @@
-import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import * as React from "react";
 import { Authenticated } from "~/components/auth/autheticated";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -19,6 +24,10 @@ import {
 	EmptyTitle,
 } from "~/components/ui/empty";
 import { Link } from "~/components/ui/link";
+import {
+	NativeSelect,
+	NativeSelectOption,
+} from "~/components/ui/native-select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import { api } from "../../../../../convex/_generated/api";
@@ -28,7 +37,7 @@ export const Route = createFileRoute("/campaigns/$campaignId/play")({
 	component: RouteComponent,
 	loader: async ({ context, params }) => {
 		const campaignId = params.campaignId as Id<"campaigns">;
-		await Promise.all([
+		const [, trees] = await Promise.all([
 			context.queryClient.ensureQueryData(
 				convexQuery(api.campaigns.getCampaignWithChildren, { id: campaignId }),
 			),
@@ -36,6 +45,14 @@ export const Route = createFileRoute("/campaigns/$campaignId/play")({
 				convexQuery(api.trees.getTrees, { campaignId }),
 			),
 		]);
+
+		await Promise.all(
+			trees.map((tree) =>
+				context.queryClient.ensureQueryData(
+					convexQuery(api.trees.getTreeWithNodesAndOptions, { id: tree._id }),
+				),
+			),
+		);
 	},
 });
 
@@ -134,7 +151,8 @@ function RouteComponent() {
 							<TabsContent key={tree._id} value={tree._id}>
 								<PlayTreePanel
 									campaign={data.campaign}
-									nodes={sortNodes(nodesByTree.get(tree._id) ?? [])}
+									characters={data.characters}
+									treeId={tree._id}
 									title={tree.name}
 									description={tree.description}
 								/>
@@ -143,7 +161,7 @@ function RouteComponent() {
 
 						{looseNodes.length > 0 ? (
 							<TabsContent value="loose">
-								<PlayTreePanel
+								<LooseNodesPanel
 									campaign={data.campaign}
 									nodes={sortNodes(looseNodes)}
 									title="Loose nodes"
@@ -159,6 +177,257 @@ function RouteComponent() {
 }
 
 function PlayTreePanel({
+	campaign,
+	characters,
+	description,
+	treeId,
+	title,
+}: {
+	campaign: Doc<"campaigns">;
+	characters: Doc<"characters">[];
+	description?: string;
+	treeId: Id<"decisionTrees">;
+	title: string;
+}) {
+	const queryClient = useQueryClient();
+	const treeQuery = convexQuery(api.trees.getTreeWithNodesAndOptions, {
+		id: treeId,
+	});
+	const { data } = useSuspenseQuery(treeQuery);
+	const [selectedCharacterId, setSelectedCharacterId] = React.useState<
+		Id<"characters"> | ""
+	>(characters[0]?._id ?? "");
+	const [intent, setIntent] = React.useState("");
+	const selectOption = useMutation({
+		mutationFn: useConvexMutation(api.decisionOptions.selectDecisionOption),
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: treeQuery.queryKey });
+		},
+	});
+
+	if (!data) {
+		return (
+			<Empty className="border">
+				<EmptyHeader>
+					<EmptyTitle>Tree not found</EmptyTitle>
+					<EmptyDescription>
+						This decision tree is no longer available.
+					</EmptyDescription>
+				</EmptyHeader>
+			</Empty>
+		);
+	}
+
+	const sortedNodeEntries = sortNodeEntries(data.nodes);
+	const currentNodeEntry =
+		sortedNodeEntries.find(
+			({ node }) => node._id === campaign.currentDecisionNodeId,
+		) ??
+		sortedNodeEntries.find(({ node }) => node.status === "active") ??
+		sortedNodeEntries.find(({ node }) => !node.parentDecisionNodeId) ??
+		sortedNodeEntries[0];
+	const currentNode = currentNodeEntry?.node;
+	const currentOptions = currentNodeEntry?.options ?? [];
+	const selectedCharacter = characters.find(
+		(character) => character._id === selectedCharacterId,
+	);
+
+	return (
+		<div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+			<section className="flex flex-col gap-4">
+				<Card>
+					<CardHeader>
+						<CardTitle>{title}</CardTitle>
+						<CardDescription>
+							{description ||
+								"Review the live scene and choose how to proceed."}
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						{currentNode ? (
+							<div className="space-y-4">
+								<div className="flex flex-wrap items-center gap-2">
+									<Badge>{currentNode.status ?? "draft"}</Badge>
+									<span className="text-sm text-muted-foreground">
+										Current playable node
+									</span>
+								</div>
+								<div>
+									<h2 className="text-2xl font-semibold">{currentNode.name}</h2>
+									<p className="mt-3 whitespace-pre-wrap text-base leading-7">
+										{currentNode.content}
+									</p>
+								</div>
+							</div>
+						) : (
+							<Empty className="border">
+								<EmptyHeader>
+									<EmptyTitle>No nodes in this tree</EmptyTitle>
+									<EmptyDescription>
+										Add a root node to make this tree playable.
+									</EmptyDescription>
+								</EmptyHeader>
+							</Empty>
+						)}
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>Available choices</CardTitle>
+						<CardDescription>
+							Options configured by the DM for this decision node.
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="grid gap-3">
+						{currentOptions.length > 0 ? (
+							currentOptions.map((optionState) => {
+								const { option } = optionState;
+								const isAvailable = isOptionAvailableToCharacter(
+									optionState,
+									selectedCharacterId || null,
+								);
+								const isSelected = optionState.selections.some(
+									(selection) =>
+										selection.characterId === selectedCharacterId &&
+										selection.status === "selected",
+								);
+								const isSelectable =
+									isAvailable &&
+									option.status !== "disabled" &&
+									option.status !== "archived";
+
+								return (
+									<div key={option._id} className="rounded-lg border p-4">
+										<div className="flex flex-wrap items-start justify-between gap-3">
+											<div>
+												<h3 className="font-medium">{option.label}</h3>
+												{option.description ? (
+													<p className="mt-1 text-sm text-muted-foreground">
+														{option.description}
+													</p>
+												) : null}
+												{!isAvailable ? (
+													<p className="mt-2 text-xs text-muted-foreground">
+														Not available to{" "}
+														{selectedCharacter?.name ?? "this character"}.
+													</p>
+												) : null}
+											</div>
+											<Badge variant="outline">
+												{option.status ?? "draft"}
+											</Badge>
+										</div>
+										<Button
+											className="mt-4"
+											disabled={
+												!selectedCharacterId ||
+												!isSelectable ||
+												selectOption.isPending
+											}
+											type="button"
+											variant={isSelected ? "default" : "secondary"}
+											onClick={() => {
+												if (!selectedCharacterId) return;
+												selectOption.mutate({
+													decisionOptionId: option._id,
+													characterId: selectedCharacterId,
+													note: intent.trim() || undefined,
+													replaceExisting: true,
+												});
+											}}
+										>
+											{isSelected ? "Selected" : "Choose this option"}
+										</Button>
+									</div>
+								);
+							})
+						) : (
+							<p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+								No options have been configured for this node yet.
+							</p>
+						)}
+					</CardContent>
+				</Card>
+			</section>
+
+			<aside className="flex flex-col gap-4">
+				<Card>
+					<CardHeader>
+						<CardTitle>Acting character</CardTitle>
+						<CardDescription>
+							Choose which character is making this decision.
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<NativeSelect
+							className="w-full"
+							value={selectedCharacterId}
+							onChange={(event) =>
+								setSelectedCharacterId(
+									event.target.value as Id<"characters"> | "",
+								)
+							}
+						>
+							<NativeSelectOption value="">
+								Select a character
+							</NativeSelectOption>
+							{characters.map((character) => (
+								<NativeSelectOption key={character._id} value={character._id}>
+									{character.name}
+								</NativeSelectOption>
+							))}
+						</NativeSelect>
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>Player intent</CardTitle>
+						<CardDescription>
+							Add optional context before choosing an option.
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="flex flex-col gap-3">
+						<Textarea
+							placeholder="I want to inspect the sigil, ask the guard about the locked gate, and..."
+							rows={6}
+							value={intent}
+							onChange={(event) => setIntent(event.target.value)}
+						/>
+						<p className="text-xs text-muted-foreground">
+							This note is saved with the selected option.
+						</p>
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>Tree outline</CardTitle>
+						<CardDescription>
+							{sortedNodeEntries.length} nodes loaded
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<ol className="space-y-2 text-sm">
+							{sortedNodeEntries.map(({ node }) => (
+								<li
+									key={node._id}
+									className="flex items-center justify-between gap-3 rounded-md border px-3 py-2"
+								>
+									<span>{node.name}</span>
+									<Badge variant="outline">{node.status ?? "draft"}</Badge>
+								</li>
+							))}
+						</ol>
+					</CardContent>
+				</Card>
+			</aside>
+		</div>
+	);
+}
+
+function LooseNodesPanel({
 	campaign,
 	description,
 	nodes,
@@ -304,6 +573,38 @@ function PlayTreePanel({
 			</aside>
 		</div>
 	);
+}
+
+type NodeWithOptions = {
+	node: Doc<"decisionNodes">;
+	options: {
+		option: Doc<"decisionOptions">;
+		availabilities: Doc<"decisionOptionAvailabilities">[];
+		selections: Doc<"decisionOptionSelections">[];
+	}[];
+};
+
+function isOptionAvailableToCharacter(
+	optionState: NodeWithOptions["options"][number],
+	characterId: Id<"characters"> | null,
+) {
+	if (!characterId) return false;
+	if (optionState.availabilities.length === 0) return true;
+
+	return optionState.availabilities.some(
+		(availability) =>
+			availability.characterId === characterId &&
+			availability.status === "available",
+	);
+}
+
+function sortNodeEntries(nodes: NodeWithOptions[]) {
+	return [...nodes].sort((first, second) => {
+		const firstOrder = first.node.order ?? Number.MAX_SAFE_INTEGER;
+		const secondOrder = second.node.order ?? Number.MAX_SAFE_INTEGER;
+		if (firstOrder !== secondOrder) return firstOrder - secondOrder;
+		return first.node._creationTime - second.node._creationTime;
+	});
 }
 
 function sortNodes(nodes: Doc<"decisionNodes">[]) {

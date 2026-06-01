@@ -13,6 +13,7 @@ import type * as campaigns from "../campaigns.js";
 import type * as characters from "../characters.js";
 import type * as chat from "../chat.js";
 import type * as decisionNodes from "../decisionNodes.js";
+import type * as decisionOptions from "../decisionOptions.js";
 import type * as factionMembers from "../factionMembers.js";
 import type * as factions from "../factions.js";
 import type * as locations from "../locations.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   characters: typeof characters;
   chat: typeof chat;
   decisionNodes: typeof decisionNodes;
+  decisionOptions: typeof decisionOptions;
   factionMembers: typeof factionMembers;
   factions: typeof factions;
   locations: typeof locations;

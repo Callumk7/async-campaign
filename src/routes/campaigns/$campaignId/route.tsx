@@ -36,6 +36,9 @@ function RouteComponent() {
 					<Link to="/campaigns/$campaignId/play" params={{ campaignId }}>
 						Play
 					</Link>
+					<Link to="/campaigns/$campaignId/journal" params={{ campaignId }}>
+						Journal
+					</Link>
 				</div>
 				<div className="">
 					{currentCharacter ? (
