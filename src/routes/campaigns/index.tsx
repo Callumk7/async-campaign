@@ -5,8 +5,14 @@ import {
 	useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Authenticated } from "#/components/auth/autheticated";
-import { Link } from "#/components/ui/link";
+import { useAuth } from "~/components/auth/auth-provider";
+import { Authenticated } from "~/components/auth/autheticated";
+import { Alert, AlertDescription } from "~/components/ui/alert";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Empty, EmptyDescription } from "~/components/ui/empty";
+import { Link } from "~/components/ui/link";
 import { api } from "../../../convex/_generated/api";
 
 export const Route = createFileRoute("/campaigns/")({
@@ -20,79 +26,82 @@ export const Route = createFileRoute("/campaigns/")({
 
 function RouteComponent() {
 	const queryClient = useQueryClient();
+	const { selectedUser } = useAuth();
 	const campaignsQuery = convexQuery(api.campaigns.getCampaigns, {});
 	const { data } = useSuspenseQuery(campaignsQuery);
 	const deleteCampaign = useMutation({
 		mutationFn: useConvexMutation(api.campaigns.deleteCampaign),
 	});
+	const canCreateCampaign =
+		selectedUser?.role === "admin" || selectedUser?.role === "dm";
 
 	return (
 		<Authenticated>
 			<main className="mx-auto flex max-w-5xl flex-col gap-6 p-6">
 				<div className="flex flex-wrap items-start justify-between gap-4">
 					<div>
-						<p className="text-sm uppercase tracking-wide text-slate-500">
-							CRUD route
-						</p>
-						<h1 className="text-3xl font-bold text-slate-950">Campaigns</h1>
-						<p className="text-slate-600">
-							Create campaigns and open one to test child CRUD functions.
-						</p>
+						<h1 className="text-3xl font-bold">Campaigns</h1>
+						<p>Create campaigns and open one to test child CRUD functions.</p>
 					</div>
-					<Link
-						to="/campaigns/new"
-						className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 hover:no-underline"
-					>
-						Create new campaign
-					</Link>
+					{canCreateCampaign ? (
+						<Link to="/campaigns/new">Create new campaign</Link>
+					) : (
+						<Alert variant="destructive">
+							<AlertDescription>
+								Only admins and DMs can create campaigns.
+							</AlertDescription>
+						</Alert>
+					)}
 				</div>
 
 				{data.length === 0 ? (
-					<section className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-500">
-						No campaigns yet. Create one to unlock the campaign workbench.
-					</section>
+					<Empty className="border border-dashed">
+						<EmptyDescription>
+							No campaigns yet. Create one to unlock the campaign workbench.
+						</EmptyDescription>
+					</Empty>
 				) : (
 					<div className="grid gap-4 md:grid-cols-2">
 						{data.map((campaign) => (
-							<article
-								key={campaign._id}
-								className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
-							>
-								<div>
-									<h2 className="text-xl font-semibold text-slate-950">
-										{campaign.name}
-									</h2>
-									<p className="line-clamp-3 text-sm text-slate-600">
+							<Card key={campaign._id} className="h-full">
+								<CardHeader>
+									<CardTitle>{campaign.name}</CardTitle>
+								</CardHeader>
+								<CardContent className="flex flex-1 flex-col gap-3">
+									<p className="line-clamp-3 text-sm">
 										{campaign.description || "No description."}
 									</p>
-								</div>
-								<div className="mt-auto flex items-center justify-between gap-3">
-									<span className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
-										{campaign.status ?? "active"}
-									</span>
-									<div className="flex gap-3">
-										<Link
-											to="/campaigns/$campaignId"
-											params={{ campaignId: campaign._id }}
-										>
-											Open
-										</Link>
-										<button
-											type="button"
-											className="text-sm text-red-600 hover:underline"
-											onClick={async () => {
-												if (!window.confirm(`Delete ${campaign.name}?`)) return;
-												await deleteCampaign.mutateAsync({ id: campaign._id });
-												await queryClient.invalidateQueries({
-													queryKey: campaignsQuery.queryKey,
-												});
-											}}
-										>
-											Delete
-										</button>
+									<div className="mt-auto flex items-center justify-between gap-3">
+										<Badge variant="secondary">
+											{campaign.status ?? "active"}
+										</Badge>
+										<div className="flex gap-3">
+											<Link
+												to="/campaigns/$campaignId"
+												params={{ campaignId: campaign._id }}
+											>
+												Open
+											</Link>
+											<Button
+												type="button"
+												variant="destructive"
+												onClick={async () => {
+													if (!window.confirm(`Delete ${campaign.name}?`))
+														return;
+													await deleteCampaign.mutateAsync({
+														id: campaign._id,
+													});
+													await queryClient.invalidateQueries({
+														queryKey: campaignsQuery.queryKey,
+													});
+												}}
+											>
+												Delete
+											</Button>
+										</div>
 									</div>
-								</div>
-							</article>
+								</CardContent>
+							</Card>
 						))}
 					</div>
 				)}
