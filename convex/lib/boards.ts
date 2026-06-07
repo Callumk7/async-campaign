@@ -16,7 +16,10 @@ export async function createCampaignBoard(
 	});
 }
 
-export async function createDefaultCampaignBoard(ctx: MutationCtx, campaignId: Id<"campaigns">) {
+export async function createDefaultCampaignBoard(
+	ctx: MutationCtx,
+	campaignId: Id<"campaigns">,
+) {
 	return await createCampaignBoard(ctx, {
 		campaignId,
 		name: "General Discussion",

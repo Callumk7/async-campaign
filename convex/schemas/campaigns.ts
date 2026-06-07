@@ -24,6 +24,15 @@ export const campaignDiscussionBoardSchema = defineTable({
 
 export const boardPostSchema = defineTable({
 	boardId: v.id("boards"),
-	message: v.string(),
-	authorId: v.id("users")
-})
+	title: v.string(),
+	body: v.string(),
+	authorId: v.id("users"),
+	updatedAt: v.number(),
+}).index("by_boardId", ["boardId"]);
+
+export const boardPostReplySchema = defineTable({
+	postId: v.id("boardPosts"),
+	body: v.string(),
+	authorId: v.id("users"),
+	updatedAt: v.number(),
+}).index("by_postId", ["postId"]);

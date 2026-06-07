@@ -2,18 +2,11 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Authenticated } from "~/components/auth/autheticated";
+import { CampaignMessageBoard } from "~/components/boards/campaign-message-board";
 import { ChatInterface } from "~/components/chat/chat-interface";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 export const Route = createFileRoute("/campaigns/$campaignId/")({
 	component: RouteComponent,
@@ -51,28 +44,7 @@ function RouteComponent() {
 					<ChatInterface roomId={data.campaign.roomId} />
 				</div>
 				<div className="col-span-3">
-					<Card>
-						<CardHeader>
-							<CardTitle>Message Board</CardTitle>
-							<CardDescription>Discuss the campaign here.</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<Tabs>
-								<TabsList>
-									{data.boards.map((board) => (
-										<TabsTrigger key={board._id} value={board._id}>
-											{board.name}
-										</TabsTrigger>
-									))}
-								</TabsList>
-								{data.boards.map((board) => (
-									<TabsContent key={board._id} value={board._id}>
-										<div>Board content</div>
-									</TabsContent>
-								))}
-							</Tabs>
-						</CardContent>
-					</Card>
+					<CampaignMessageBoard boards={data.boards} />
 				</div>
 			</div>
 		</main>
