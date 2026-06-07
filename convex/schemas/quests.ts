@@ -5,4 +5,4 @@ export const questsSchema = defineTable({
 	name: v.string(),
 	description: v.optional(v.string()),
 	campaignId: v.id("campaigns"),
-})
+}).index("by_campaignId", ["campaignId"]);

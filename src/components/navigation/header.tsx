@@ -65,6 +65,11 @@ export function Header() {
 							Users
 						</NavigationMenuRouterLink>
 					</NavigationMenuItem>
+					<NavigationMenuItem>
+						<NavigationMenuRouterLink to="/admin">
+							Admin
+						</NavigationMenuRouterLink>
+					</NavigationMenuItem>
 				</NavigationMenuList>
 			</NavigationMenu>
 			<div className="flex gap-4 items-center text-sm text-amber-600">

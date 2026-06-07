@@ -12,7 +12,7 @@ export function CampaignNavigation({ campaignId }: CampaignNavigationProps) {
 				<Link to="/campaigns/$campaignId" params={{ campaignId }}>
 					Overview
 				</Link>
-				<Link to="/campaigns/$campaignId" params={{ campaignId }}>
+				<Link to="/campaigns/$campaignId/quests" params={{ campaignId }}>
 					Quests
 				</Link>
 				<Link to="/campaigns/$campaignId/play" params={{ campaignId }}>

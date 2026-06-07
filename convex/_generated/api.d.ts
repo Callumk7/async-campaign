@@ -21,6 +21,7 @@ import type * as lib_rooms from "../lib/rooms.js";
 import type * as locations from "../locations.js";
 import type * as messages from "../messages.js";
 import type * as notes from "../notes.js";
+import type * as quests from "../quests.js";
 import type * as rooms from "../rooms.js";
 import type * as schemas_campaignMembers from "../schemas/campaignMembers.js";
 import type * as schemas_campaigns from "../schemas/campaigns.js";
@@ -56,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   locations: typeof locations;
   messages: typeof messages;
   notes: typeof notes;
+  quests: typeof quests;
   rooms: typeof rooms;
   "schemas/campaignMembers": typeof schemas_campaignMembers;
   "schemas/campaigns": typeof schemas_campaigns;
