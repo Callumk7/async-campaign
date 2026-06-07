@@ -67,7 +67,7 @@ export const getCampaignWithChildren = query({
 		const campaign = await ctx.db.get(args.id);
 		if (!campaign) return null;
 
-		const [memberships, characters, decisionNodes, locations, factions, notes, messages] = await Promise.all([
+		const [memberships, characters, decisionNodes, locations, factions, notes, rooms] = await Promise.all([
 			ctx.db
 				.query("campaignMembers")
 				.withIndex("by_campaignId", (q) => q.eq("campaignId", args.id))
@@ -94,11 +94,24 @@ export const getCampaignWithChildren = query({
 				.order("desc")
 				.take(50),
 			ctx.db
-				.query("messages")
+				.query("rooms")
 				.withIndex("by_campaignId", (q) => q.eq("campaignId", args.id))
-				.order("desc")
-				.take(50),
+				.take(100),
 		]);
+
+		const messagesByRoom = await Promise.all(
+			rooms.map((room) =>
+				ctx.db
+					.query("messages")
+					.withIndex("by_roomId", (q) => q.eq("roomId", room._id))
+					.order("desc")
+					.take(50),
+			),
+		);
+		const messages = messagesByRoom
+			.flat()
+			.sort((a, b) => b._creationTime - a._creationTime)
+			.slice(0, 50);
 
 		const membersWithUsers = await Promise.all(
 			memberships.map(async (membership) => ({
@@ -150,6 +163,10 @@ export const createCampaign = mutation({
 			}
 		}
 
+		const roomId = await ctx.db.insert("rooms", {
+			entityType: "campaign",
+		})
+
 		const campaignId = await ctx.db.insert("campaigns", {
 			name: args.name,
 			description: args.description,
@@ -157,8 +174,11 @@ export const createCampaign = mutation({
 			status: args.status ?? "active",
 			currentDecisionNodeId: args.currentDecisionNodeId,
 			coverImageUrl: args.coverImageUrl,
+			roomId: roomId,
 			updatedAt: Date.now(),
 		});
+
+		await ctx.db.patch(roomId, { campaignId });
 
 		if (args.ownerId) {
 			await ctx.db.insert("campaignMembers", {

@@ -4,8 +4,6 @@ import { mutation, query, type MutationCtx, type QueryCtx } from "./_generated/s
 
 const decisionOptionStatus = v.union(v.literal("draft"), v.literal("active"), v.literal("disabled"), v.literal("archived"));
 const decisionOptionAvailabilityStatus = v.union(v.literal("available"), v.literal("hidden"), v.literal("disabled"));
-const decisionOptionSelectionStatus = v.union(v.literal("selected"), v.literal("retracted"), v.literal("locked"));
-
 const availabilityInput = v.object({
 	characterId: v.id("characters"),
 	status: v.optional(decisionOptionAvailabilityStatus),

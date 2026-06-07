@@ -81,9 +81,19 @@ export const createTree = mutation({
 		campaignId: v.id("campaigns"),
 	},
 	handler: async (ctx, args) => {
-		return await ctx.db.insert("decisionTrees", {
-			name: args.name,
-			campaignId: args.campaignId
+		const roomId = await ctx.db.insert("rooms", {
+			entityType: "tree",
+			campaignId: args.campaignId,
 		})
+
+		const treeId = await ctx.db.insert("decisionTrees", {
+			name: args.name,
+			campaignId: args.campaignId,
+			roomId,
+		})
+
+		await ctx.db.patch(roomId, { treeId })
+
+		return treeId
 	}
 })

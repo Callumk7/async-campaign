@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
+import { ChatInterface } from "~/components/chat/chat-interface";
 
 export const Route = createFileRoute("/campaigns/$campaignId/")({
 	component: RouteComponent,
@@ -57,7 +58,17 @@ function RouteComponent() {
 					<CardHeader>
 						<div className="flex flex-wrap items-start justify-between gap-4">
 							<CardTitle>{data.campaign.name}</CardTitle>
-							<Link to="/campaigns">← Back to campaigns</Link>
+							<div className="flex gap-2">
+								<Link to="/campaigns">← Back to campaigns</Link>
+								<Link
+									variant="secondary"
+									size="lg"
+									to="/campaigns/$campaignId/play"
+									params={{ campaignId }}
+								>
+									PLAY
+								</Link>
+							</div>
 						</div>
 					</CardHeader>
 					<CardContent>
@@ -148,6 +159,7 @@ function RouteComponent() {
 							)}
 						</CardContent>
 					</Card>
+					<ChatInterface roomId={data.campaign.roomId} />
 				</div>
 			</main>
 		</Authenticated>

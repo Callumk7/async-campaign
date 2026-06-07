@@ -125,16 +125,26 @@ export const createDecisionNode = mutation({
 		order: v.optional(v.number()),
 	},
 	handler: async (ctx, args) => {
-		return await ctx.db.insert("decisionNodes", {
+		const roomId = await ctx.db.insert("rooms", {
+			entityType: "decisionNode",
+			campaignId: args.campaignId,
+		});
+
+		const decisionNodeId = await ctx.db.insert("decisionNodes", {
 			name: args.name,
 			content: args.content,
 			campaignId: args.campaignId,
+			roomId,
 			parentDecisionNodeId: args.parentDecisionNodeId,
 			decisionTreeId: args.decisionTreeId,
 			status: args.status ?? "draft",
 			order: args.order,
 			updatedAt: Date.now(),
 		});
+
+		await ctx.db.patch(roomId, { decisionNodeId });
+
+		return decisionNodeId;
 	},
 });
 
@@ -151,16 +161,24 @@ export const createDecisionNodeWithOptions = mutation({
 	},
 	handler: async (ctx, args) => {
 		const now = Date.now();
+		const roomId = await ctx.db.insert("rooms", {
+			entityType: "decisionNode",
+			campaignId: args.campaignId,
+		});
+
 		const nodeId = await ctx.db.insert("decisionNodes", {
 			name: args.name,
 			content: args.content,
 			campaignId: args.campaignId,
+			roomId,
 			parentDecisionNodeId: args.parentDecisionNodeId,
 			decisionTreeId: args.decisionTreeId,
 			status: args.status ?? "draft",
 			order: args.order,
 			updatedAt: now,
 		});
+
+		await ctx.db.patch(roomId, { decisionNodeId: nodeId });
 
 		for (const option of args.options ?? []) {
 			if (option.outcomeDecisionNodeId) {

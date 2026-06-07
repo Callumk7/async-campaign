@@ -28,7 +28,6 @@ import { Route as CampaignsCampaignIdAdminRouteRouteImport } from './routes/camp
 import { Route as CampaignsCampaignIdAdminIndexRouteImport } from './routes/campaigns/$campaignId/admin/index'
 import { Route as CampaignsCampaignIdPlayersAddRouteImport } from './routes/campaigns/$campaignId/players/add'
 import { Route as CampaignsCampaignIdAdminTreesRouteImport } from './routes/campaigns/$campaignId/admin/trees'
-import { Route as CampaignsCampaignIdAdminNodesRouteImport } from './routes/campaigns/$campaignId/admin/nodes'
 import { Route as CampaignsCampaignIdAdminTreesTreeIdRouteImport } from './routes/campaigns/$campaignId/admin/trees_.$treeId'
 import { Route as CampaignsCampaignIdAdminNodesNodeIdRouteImport } from './routes/campaigns/$campaignId/admin/nodes_.$nodeId'
 
@@ -137,12 +136,6 @@ const CampaignsCampaignIdAdminTreesRoute =
     path: '/trees',
     getParentRoute: () => CampaignsCampaignIdAdminRouteRoute,
   } as any)
-const CampaignsCampaignIdAdminNodesRoute =
-  CampaignsCampaignIdAdminNodesRouteImport.update({
-    id: '/nodes',
-    path: '/nodes',
-    getParentRoute: () => CampaignsCampaignIdAdminRouteRoute,
-  } as any)
 const CampaignsCampaignIdAdminTreesTreeIdRoute =
   CampaignsCampaignIdAdminTreesTreeIdRouteImport.update({
     id: '/trees_/$treeId',
@@ -173,7 +166,6 @@ export interface FileRoutesByFullPath {
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
   '/campaigns/$campaignId/': typeof CampaignsCampaignIdIndexRoute
-  '/campaigns/$campaignId/admin/nodes': typeof CampaignsCampaignIdAdminNodesRoute
   '/campaigns/$campaignId/admin/trees': typeof CampaignsCampaignIdAdminTreesRoute
   '/campaigns/$campaignId/players/add': typeof CampaignsCampaignIdPlayersAddRoute
   '/campaigns/$campaignId/admin/': typeof CampaignsCampaignIdAdminIndexRoute
@@ -194,7 +186,6 @@ export interface FileRoutesByTo {
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdIndexRoute
-  '/campaigns/$campaignId/admin/nodes': typeof CampaignsCampaignIdAdminNodesRoute
   '/campaigns/$campaignId/admin/trees': typeof CampaignsCampaignIdAdminTreesRoute
   '/campaigns/$campaignId/players/add': typeof CampaignsCampaignIdPlayersAddRoute
   '/campaigns/$campaignId/admin': typeof CampaignsCampaignIdAdminIndexRoute
@@ -219,7 +210,6 @@ export interface FileRoutesById {
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
   '/campaigns/$campaignId/': typeof CampaignsCampaignIdIndexRoute
-  '/campaigns/$campaignId/admin/nodes': typeof CampaignsCampaignIdAdminNodesRoute
   '/campaigns/$campaignId/admin/trees': typeof CampaignsCampaignIdAdminTreesRoute
   '/campaigns/$campaignId/players/add': typeof CampaignsCampaignIdPlayersAddRoute
   '/campaigns/$campaignId/admin/': typeof CampaignsCampaignIdAdminIndexRoute
@@ -245,7 +235,6 @@ export interface FileRouteTypes {
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
     | '/campaigns/$campaignId/'
-    | '/campaigns/$campaignId/admin/nodes'
     | '/campaigns/$campaignId/admin/trees'
     | '/campaigns/$campaignId/players/add'
     | '/campaigns/$campaignId/admin/'
@@ -266,7 +255,6 @@ export interface FileRouteTypes {
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
     | '/campaigns/$campaignId'
-    | '/campaigns/$campaignId/admin/nodes'
     | '/campaigns/$campaignId/admin/trees'
     | '/campaigns/$campaignId/players/add'
     | '/campaigns/$campaignId/admin'
@@ -290,7 +278,6 @@ export interface FileRouteTypes {
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
     | '/campaigns/$campaignId/'
-    | '/campaigns/$campaignId/admin/nodes'
     | '/campaigns/$campaignId/admin/trees'
     | '/campaigns/$campaignId/players/add'
     | '/campaigns/$campaignId/admin/'
@@ -442,13 +429,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignsCampaignIdAdminTreesRouteImport
       parentRoute: typeof CampaignsCampaignIdAdminRouteRoute
     }
-    '/campaigns/$campaignId/admin/nodes': {
-      id: '/campaigns/$campaignId/admin/nodes'
-      path: '/nodes'
-      fullPath: '/campaigns/$campaignId/admin/nodes'
-      preLoaderRoute: typeof CampaignsCampaignIdAdminNodesRouteImport
-      parentRoute: typeof CampaignsCampaignIdAdminRouteRoute
-    }
     '/campaigns/$campaignId/admin/trees_/$treeId': {
       id: '/campaigns/$campaignId/admin/trees_/$treeId'
       path: '/trees/$treeId'
@@ -483,7 +463,6 @@ const UsersRouteRouteWithChildren = UsersRouteRoute._addFileChildren(
 )
 
 interface CampaignsCampaignIdAdminRouteRouteChildren {
-  CampaignsCampaignIdAdminNodesRoute: typeof CampaignsCampaignIdAdminNodesRoute
   CampaignsCampaignIdAdminTreesRoute: typeof CampaignsCampaignIdAdminTreesRoute
   CampaignsCampaignIdAdminIndexRoute: typeof CampaignsCampaignIdAdminIndexRoute
   CampaignsCampaignIdAdminNodesNodeIdRoute: typeof CampaignsCampaignIdAdminNodesNodeIdRoute
@@ -492,7 +471,6 @@ interface CampaignsCampaignIdAdminRouteRouteChildren {
 
 const CampaignsCampaignIdAdminRouteRouteChildren: CampaignsCampaignIdAdminRouteRouteChildren =
   {
-    CampaignsCampaignIdAdminNodesRoute: CampaignsCampaignIdAdminNodesRoute,
     CampaignsCampaignIdAdminTreesRoute: CampaignsCampaignIdAdminTreesRoute,
     CampaignsCampaignIdAdminIndexRoute: CampaignsCampaignIdAdminIndexRoute,
     CampaignsCampaignIdAdminNodesNodeIdRoute:

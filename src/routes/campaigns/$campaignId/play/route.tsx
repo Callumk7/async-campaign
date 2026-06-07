@@ -32,6 +32,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import { api } from "../../../../../convex/_generated/api";
 import type { Doc, Id } from "../../../../../convex/_generated/dataModel";
+import { ChatInterface } from "~/components/chat/chat-interface";
 
 export const Route = createFileRoute("/campaigns/$campaignId/play")({
 	component: RouteComponent,
@@ -233,9 +234,9 @@ function PlayTreePanel({
 	);
 
 	return (
-		<div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-			<section className="flex flex-col gap-4">
-				<Card>
+		<div className="grid gap-6 grid-cols-3">
+			<section className="flex flex-col gap-4 col-span-2">
+				<Card className="h-full">
 					<CardHeader>
 						<CardTitle>{title}</CardTitle>
 						<CardDescription>
@@ -272,7 +273,7 @@ function PlayTreePanel({
 					</CardContent>
 				</Card>
 
-				<Card>
+				<Card className="h-full">
 					<CardHeader>
 						<CardTitle>Available choices</CardTitle>
 						<CardDescription>
@@ -349,38 +350,10 @@ function PlayTreePanel({
 						)}
 					</CardContent>
 				</Card>
+				<ChatInterface roomId={data.tree.roomId} />
 			</section>
 
 			<aside className="flex flex-col gap-4">
-				<Card>
-					<CardHeader>
-						<CardTitle>Acting character</CardTitle>
-						<CardDescription>
-							Choose which character is making this decision.
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<NativeSelect
-							className="w-full"
-							value={selectedCharacterId}
-							onChange={(event) =>
-								setSelectedCharacterId(
-									event.target.value as Id<"characters"> | "",
-								)
-							}
-						>
-							<NativeSelectOption value="">
-								Select a character
-							</NativeSelectOption>
-							{characters.map((character) => (
-								<NativeSelectOption key={character._id} value={character._id}>
-									{character.name}
-								</NativeSelectOption>
-							))}
-						</NativeSelect>
-					</CardContent>
-				</Card>
-
 				<Card>
 					<CardHeader>
 						<CardTitle>Player intent</CardTitle>
