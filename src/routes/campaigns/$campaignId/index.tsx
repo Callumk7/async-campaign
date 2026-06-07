@@ -13,7 +13,7 @@ import {
 import { Link } from "~/components/ui/link";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { Tabs } from "~/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 export const Route = createFileRoute("/campaigns/$campaignId/")({
 	component: RouteComponent,
@@ -57,9 +57,20 @@ function RouteComponent() {
 							<CardDescription>Discuss the campaign here.</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<div>
-								<h1>{data.boards[0].name}</h1>
-							</div>
+							<Tabs>
+								<TabsList>
+									{data.boards.map((board) => (
+										<TabsTrigger key={board._id} value={board._id}>
+											{board.name}
+										</TabsTrigger>
+									))}
+								</TabsList>
+								{data.boards.map((board) => (
+									<TabsContent key={board._id} value={board._id}>
+										<div>Board content</div>
+									</TabsContent>
+								))}
+							</Tabs>
 						</CardContent>
 					</Card>
 				</div>
