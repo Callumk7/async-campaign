@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import type { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
+import { createEntityRoom } from "./lib/rooms";
 
 const decisionNodeStatus = v.union(v.literal("draft"), v.literal("active"), v.literal("resolved"), v.literal("archived"));
 const decisionOptionStatus = v.union(v.literal("draft"), v.literal("active"), v.literal("disabled"), v.literal("archived"));
@@ -125,7 +126,7 @@ export const createDecisionNode = mutation({
 		order: v.optional(v.number()),
 	},
 	handler: async (ctx, args) => {
-		const roomId = await ctx.db.insert("rooms", {
+		const roomId = await createEntityRoom(ctx, {
 			entityType: "decisionNode",
 			campaignId: args.campaignId,
 		});
@@ -161,7 +162,7 @@ export const createDecisionNodeWithOptions = mutation({
 	},
 	handler: async (ctx, args) => {
 		const now = Date.now();
-		const roomId = await ctx.db.insert("rooms", {
+		const roomId = await createEntityRoom(ctx, {
 			entityType: "decisionNode",
 			campaignId: args.campaignId,
 		});

@@ -15,3 +15,15 @@ export const campaignSchema = defineTable({
 })
 	.index("by_ownerId", ["ownerId"])
 	.index("by_status", ["status"]);
+
+export const campaignDiscussionBoardSchema = defineTable({
+	campaignId: v.id("campaigns"),
+	name: v.string(),
+	description: v.optional(v.string()),
+}).index("by_campaign", ["campaignId"]);
+
+export const boardPostSchema = defineTable({
+	boardId: v.id("boards"),
+	message: v.string(),
+	authorId: v.id("users")
+})

@@ -18,3 +18,9 @@ export const charactersSchema = defineTable({
 	.index("by_locationId", ["locationId"])
 	.index("by_campaignId_and_locationId", ["campaignId", "locationId"])
 	.index("by_playerId_and_campaignId", ["playerId", "campaignId"]);
+
+export const characterResourcesSchema = defineTable({
+	characterId: v.id("characters"),
+	resourceType: v.string(),
+	amount: v.number(),
+}).index("by_characterId", ["characterId"]);

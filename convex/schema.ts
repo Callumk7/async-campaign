@@ -1,8 +1,8 @@
 import { defineSchema } from "convex/server";
 
 import { campaignMembersSchema } from "./schemas/campaignMembers";
-import { campaignSchema } from "./schemas/campaigns";
-import { charactersSchema } from "./schemas/characters";
+import { boardPostSchema, campaignDiscussionBoardSchema, campaignSchema } from "./schemas/campaigns";
+import { characterResourcesSchema, charactersSchema } from "./schemas/characters";
 import {
 	decisionNodesSchema,
 	decisionOptionAvailabilitiesSchema,
@@ -15,12 +15,15 @@ import { notesSchema } from "./schemas/notes";
 import { roomsSchema } from "./schemas/rooms";
 import { usersSchema } from "./schemas/users";
 import { factionMembersSchema, factionsSchema, locationsSchema } from "./schemas/world";
+import { questsSchema } from "./schemas/quests";
 
 export default defineSchema({
 	messages: messagesSchema,
 	rooms: roomsSchema,
 	users: usersSchema,
 	campaigns: campaignSchema,
+	boards: campaignDiscussionBoardSchema,
+	boardPosts: boardPostSchema,
 	campaignMembers: campaignMembersSchema,
 	decisionNodes: decisionNodesSchema,
 	decisionOptions: decisionOptionsSchema,
@@ -28,8 +31,10 @@ export default defineSchema({
 	decisionOptionSelections: decisionOptionSelectionsSchema,
 	decisionTrees: decisionTreesSchema,
 	characters: charactersSchema,
+	characterResources: characterResourcesSchema,
 	factions: factionsSchema,
 	factionMembers: factionMembersSchema,
 	notes: notesSchema,
 	locations: locationsSchema,
+	quests: questsSchema
 });

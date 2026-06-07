@@ -1,7 +1,13 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { createDefaultCampaignBoard } from "./lib/boards";
+import { createEntityRoom } from "./lib/rooms";
 
-const campaignStatus = v.union(v.literal("active"), v.literal("paused"), v.literal("archived"));
+const campaignStatus = v.union(
+	v.literal("active"),
+	v.literal("paused"),
+	v.literal("archived"),
+);
 
 export const getCampaigns = query({
 	args: {},
@@ -67,7 +73,16 @@ export const getCampaignWithChildren = query({
 		const campaign = await ctx.db.get(args.id);
 		if (!campaign) return null;
 
-		const [memberships, characters, decisionNodes, locations, factions, notes, rooms] = await Promise.all([
+		const [
+			memberships,
+			characters,
+			decisionNodes,
+			locations,
+			factions,
+			notes,
+			rooms,
+			boards,
+		] = await Promise.all([
 			ctx.db
 				.query("campaignMembers")
 				.withIndex("by_campaignId", (q) => q.eq("campaignId", args.id))
@@ -97,6 +112,10 @@ export const getCampaignWithChildren = query({
 				.query("rooms")
 				.withIndex("by_campaignId", (q) => q.eq("campaignId", args.id))
 				.take(100),
+			ctx.db
+				.query("boards")
+				.withIndex("by_campaign", (q) => q.eq("campaignId", args.id))
+				.take(100),
 		]);
 
 		const messagesByRoom = await Promise.all(
@@ -117,7 +136,9 @@ export const getCampaignWithChildren = query({
 			memberships.map(async (membership) => ({
 				membership,
 				user: await ctx.db.get(membership.userId),
-				activeCharacter: membership.activeCharacterId ? await ctx.db.get(membership.activeCharacterId) : null,
+				activeCharacter: membership.activeCharacterId
+					? await ctx.db.get(membership.activeCharacterId)
+					: null,
 			})),
 		);
 
@@ -131,6 +152,7 @@ export const getCampaignWithChildren = query({
 			factions,
 			notes,
 			messages: messages.reverse(),
+			boards,
 		};
 	},
 });
@@ -163,9 +185,9 @@ export const createCampaign = mutation({
 			}
 		}
 
-		const roomId = await ctx.db.insert("rooms", {
+		const roomId = await createEntityRoom(ctx, {
 			entityType: "campaign",
-		})
+		});
 
 		const campaignId = await ctx.db.insert("campaigns", {
 			name: args.name,
@@ -179,6 +201,7 @@ export const createCampaign = mutation({
 		});
 
 		await ctx.db.patch(roomId, { campaignId });
+		await createDefaultCampaignBoard(ctx, campaignId);
 
 		if (args.ownerId) {
 			await ctx.db.insert("campaignMembers", {

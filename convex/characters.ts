@@ -69,6 +69,21 @@ export const getCharacter = query({
 	},
 });
 
+export const getCharacterWithResources = query({
+	args: { id: v.id("characters") },
+	handler: async (ctx, args) => {
+		const character = await ctx.db.get(args.id);
+		if (!character) return null;
+
+		const resources = await ctx.db
+			.query("characterResources")
+			.withIndex("by_characterId", (q) => q.eq("characterId", args.id))
+			.take(50);
+
+		return { character, resources };
+	},
+});
+
 export const getCharacterWithChildren = query({
 	args: { id: v.id("characters") },
 	handler: async (ctx, args) => {
