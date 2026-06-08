@@ -11,9 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as UsersRouteRouteImport } from './routes/users/route'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UsersIndexRouteImport } from './routes/users/index'
 import { Route as CampaignsIndexRouteImport } from './routes/campaigns/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as UsersMeRouteImport } from './routes/users/me'
 import { Route as CampaignsNewRouteImport } from './routes/campaigns/new'
 import { Route as CampaignsCampaignIdRouteRouteImport } from './routes/campaigns/$campaignId/route'
@@ -21,10 +23,14 @@ import { Route as CampaignsCampaignIdIndexRouteImport } from './routes/campaigns
 import { Route as UsersUserIdCharactersRouteImport } from './routes/users/$userId.characters'
 import { Route as CampaignsCampaignIdLoginRouteImport } from './routes/campaigns/$campaignId/login'
 import { Route as CampaignsCampaignIdChatRouteImport } from './routes/campaigns/$campaignId/chat'
+import { Route as CampaignsCampaignIdCharacterRouteImport } from './routes/campaigns/$campaignId/character'
+import { Route as AdminCampaignIdQuestsRouteImport } from './routes/admin/$campaignId/quests'
+import { Route as CampaignsCampaignIdQuestsRouteRouteImport } from './routes/campaigns/$campaignId/quests/route'
 import { Route as CampaignsCampaignIdPlayersRouteRouteImport } from './routes/campaigns/$campaignId/players/route'
 import { Route as CampaignsCampaignIdPlayRouteRouteImport } from './routes/campaigns/$campaignId/play/route'
 import { Route as CampaignsCampaignIdJournalRouteRouteImport } from './routes/campaigns/$campaignId/journal/route'
 import { Route as CampaignsCampaignIdAdminRouteRouteImport } from './routes/campaigns/$campaignId/admin/route'
+import { Route as CampaignsCampaignIdQuestsIndexRouteImport } from './routes/campaigns/$campaignId/quests/index'
 import { Route as CampaignsCampaignIdAdminIndexRouteImport } from './routes/campaigns/$campaignId/admin/index'
 import { Route as CampaignsCampaignIdPlayersAddRouteImport } from './routes/campaigns/$campaignId/players/add'
 import { Route as CampaignsCampaignIdAdminTreesRouteImport } from './routes/campaigns/$campaignId/admin/trees'
@@ -41,6 +47,11 @@ const UsersRouteRoute = UsersRouteRouteImport.update({
   path: '/users',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,6 +66,11 @@ const CampaignsIndexRoute = CampaignsIndexRouteImport.update({
   id: '/campaigns/',
   path: '/campaigns/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const UsersMeRoute = UsersMeRouteImport.update({
   id: '/me',
@@ -94,6 +110,23 @@ const CampaignsCampaignIdChatRoute = CampaignsCampaignIdChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => CampaignsCampaignIdRouteRoute,
 } as any)
+const CampaignsCampaignIdCharacterRoute =
+  CampaignsCampaignIdCharacterRouteImport.update({
+    id: '/character',
+    path: '/character',
+    getParentRoute: () => CampaignsCampaignIdRouteRoute,
+  } as any)
+const AdminCampaignIdQuestsRoute = AdminCampaignIdQuestsRouteImport.update({
+  id: '/$campaignId/quests',
+  path: '/$campaignId/quests',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const CampaignsCampaignIdQuestsRouteRoute =
+  CampaignsCampaignIdQuestsRouteRouteImport.update({
+    id: '/quests',
+    path: '/quests',
+    getParentRoute: () => CampaignsCampaignIdRouteRoute,
+  } as any)
 const CampaignsCampaignIdPlayersRouteRoute =
   CampaignsCampaignIdPlayersRouteRouteImport.update({
     id: '/players',
@@ -117,6 +150,12 @@ const CampaignsCampaignIdAdminRouteRoute =
     id: '/admin',
     path: '/admin',
     getParentRoute: () => CampaignsCampaignIdRouteRoute,
+  } as any)
+const CampaignsCampaignIdQuestsIndexRoute =
+  CampaignsCampaignIdQuestsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => CampaignsCampaignIdQuestsRouteRoute,
   } as any)
 const CampaignsCampaignIdAdminIndexRoute =
   CampaignsCampaignIdAdminIndexRouteImport.update({
@@ -151,17 +190,22 @@ const CampaignsCampaignIdAdminNodesNodeIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/users': typeof UsersRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRouteWithChildren
   '/campaigns/new': typeof CampaignsNewRoute
   '/users/me': typeof UsersMeRoute
+  '/admin/': typeof AdminIndexRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/users/': typeof UsersIndexRoute
   '/campaigns/$campaignId/admin': typeof CampaignsCampaignIdAdminRouteRouteWithChildren
   '/campaigns/$campaignId/journal': typeof CampaignsCampaignIdJournalRouteRoute
   '/campaigns/$campaignId/play': typeof CampaignsCampaignIdPlayRouteRoute
   '/campaigns/$campaignId/players': typeof CampaignsCampaignIdPlayersRouteRouteWithChildren
+  '/campaigns/$campaignId/quests': typeof CampaignsCampaignIdQuestsRouteRouteWithChildren
+  '/admin/$campaignId/quests': typeof AdminCampaignIdQuestsRoute
+  '/campaigns/$campaignId/character': typeof CampaignsCampaignIdCharacterRoute
   '/campaigns/$campaignId/chat': typeof CampaignsCampaignIdChatRoute
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
@@ -169,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/campaigns/$campaignId/admin/trees': typeof CampaignsCampaignIdAdminTreesRoute
   '/campaigns/$campaignId/players/add': typeof CampaignsCampaignIdPlayersAddRoute
   '/campaigns/$campaignId/admin/': typeof CampaignsCampaignIdAdminIndexRoute
+  '/campaigns/$campaignId/quests/': typeof CampaignsCampaignIdQuestsIndexRoute
   '/campaigns/$campaignId/admin/nodes/$nodeId': typeof CampaignsCampaignIdAdminNodesNodeIdRoute
   '/campaigns/$campaignId/admin/trees/$treeId': typeof CampaignsCampaignIdAdminTreesTreeIdRoute
 }
@@ -177,11 +222,14 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/campaigns/new': typeof CampaignsNewRoute
   '/users/me': typeof UsersMeRoute
+  '/admin': typeof AdminIndexRoute
   '/campaigns': typeof CampaignsIndexRoute
   '/users': typeof UsersIndexRoute
   '/campaigns/$campaignId/journal': typeof CampaignsCampaignIdJournalRouteRoute
   '/campaigns/$campaignId/play': typeof CampaignsCampaignIdPlayRouteRoute
   '/campaigns/$campaignId/players': typeof CampaignsCampaignIdPlayersRouteRouteWithChildren
+  '/admin/$campaignId/quests': typeof AdminCampaignIdQuestsRoute
+  '/campaigns/$campaignId/character': typeof CampaignsCampaignIdCharacterRoute
   '/campaigns/$campaignId/chat': typeof CampaignsCampaignIdChatRoute
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
@@ -189,23 +237,29 @@ export interface FileRoutesByTo {
   '/campaigns/$campaignId/admin/trees': typeof CampaignsCampaignIdAdminTreesRoute
   '/campaigns/$campaignId/players/add': typeof CampaignsCampaignIdPlayersAddRoute
   '/campaigns/$campaignId/admin': typeof CampaignsCampaignIdAdminIndexRoute
+  '/campaigns/$campaignId/quests': typeof CampaignsCampaignIdQuestsIndexRoute
   '/campaigns/$campaignId/admin/nodes/$nodeId': typeof CampaignsCampaignIdAdminNodesNodeIdRoute
   '/campaigns/$campaignId/admin/trees/$treeId': typeof CampaignsCampaignIdAdminTreesTreeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/users': typeof UsersRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteRouteWithChildren
   '/campaigns/new': typeof CampaignsNewRoute
   '/users/me': typeof UsersMeRoute
+  '/admin/': typeof AdminIndexRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/users/': typeof UsersIndexRoute
   '/campaigns/$campaignId/admin': typeof CampaignsCampaignIdAdminRouteRouteWithChildren
   '/campaigns/$campaignId/journal': typeof CampaignsCampaignIdJournalRouteRoute
   '/campaigns/$campaignId/play': typeof CampaignsCampaignIdPlayRouteRoute
   '/campaigns/$campaignId/players': typeof CampaignsCampaignIdPlayersRouteRouteWithChildren
+  '/campaigns/$campaignId/quests': typeof CampaignsCampaignIdQuestsRouteRouteWithChildren
+  '/admin/$campaignId/quests': typeof AdminCampaignIdQuestsRoute
+  '/campaigns/$campaignId/character': typeof CampaignsCampaignIdCharacterRoute
   '/campaigns/$campaignId/chat': typeof CampaignsCampaignIdChatRoute
   '/campaigns/$campaignId/login': typeof CampaignsCampaignIdLoginRoute
   '/users/$userId/characters': typeof UsersUserIdCharactersRoute
@@ -213,6 +267,7 @@ export interface FileRoutesById {
   '/campaigns/$campaignId/admin/trees': typeof CampaignsCampaignIdAdminTreesRoute
   '/campaigns/$campaignId/players/add': typeof CampaignsCampaignIdPlayersAddRoute
   '/campaigns/$campaignId/admin/': typeof CampaignsCampaignIdAdminIndexRoute
+  '/campaigns/$campaignId/quests/': typeof CampaignsCampaignIdQuestsIndexRoute
   '/campaigns/$campaignId/admin/nodes_/$nodeId': typeof CampaignsCampaignIdAdminNodesNodeIdRoute
   '/campaigns/$campaignId/admin/trees_/$treeId': typeof CampaignsCampaignIdAdminTreesTreeIdRoute
 }
@@ -220,17 +275,22 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/users'
     | '/login'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/users/me'
+    | '/admin/'
     | '/campaigns/'
     | '/users/'
     | '/campaigns/$campaignId/admin'
     | '/campaigns/$campaignId/journal'
     | '/campaigns/$campaignId/play'
     | '/campaigns/$campaignId/players'
+    | '/campaigns/$campaignId/quests'
+    | '/admin/$campaignId/quests'
+    | '/campaigns/$campaignId/character'
     | '/campaigns/$campaignId/chat'
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
@@ -238,6 +298,7 @@ export interface FileRouteTypes {
     | '/campaigns/$campaignId/admin/trees'
     | '/campaigns/$campaignId/players/add'
     | '/campaigns/$campaignId/admin/'
+    | '/campaigns/$campaignId/quests/'
     | '/campaigns/$campaignId/admin/nodes/$nodeId'
     | '/campaigns/$campaignId/admin/trees/$treeId'
   fileRoutesByTo: FileRoutesByTo
@@ -246,11 +307,14 @@ export interface FileRouteTypes {
     | '/login'
     | '/campaigns/new'
     | '/users/me'
+    | '/admin'
     | '/campaigns'
     | '/users'
     | '/campaigns/$campaignId/journal'
     | '/campaigns/$campaignId/play'
     | '/campaigns/$campaignId/players'
+    | '/admin/$campaignId/quests'
+    | '/campaigns/$campaignId/character'
     | '/campaigns/$campaignId/chat'
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
@@ -258,22 +322,28 @@ export interface FileRouteTypes {
     | '/campaigns/$campaignId/admin/trees'
     | '/campaigns/$campaignId/players/add'
     | '/campaigns/$campaignId/admin'
+    | '/campaigns/$campaignId/quests'
     | '/campaigns/$campaignId/admin/nodes/$nodeId'
     | '/campaigns/$campaignId/admin/trees/$treeId'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/users'
     | '/login'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/users/me'
+    | '/admin/'
     | '/campaigns/'
     | '/users/'
     | '/campaigns/$campaignId/admin'
     | '/campaigns/$campaignId/journal'
     | '/campaigns/$campaignId/play'
     | '/campaigns/$campaignId/players'
+    | '/campaigns/$campaignId/quests'
+    | '/admin/$campaignId/quests'
+    | '/campaigns/$campaignId/character'
     | '/campaigns/$campaignId/chat'
     | '/campaigns/$campaignId/login'
     | '/users/$userId/characters'
@@ -281,12 +351,14 @@ export interface FileRouteTypes {
     | '/campaigns/$campaignId/admin/trees'
     | '/campaigns/$campaignId/players/add'
     | '/campaigns/$campaignId/admin/'
+    | '/campaigns/$campaignId/quests/'
     | '/campaigns/$campaignId/admin/nodes_/$nodeId'
     | '/campaigns/$campaignId/admin/trees_/$treeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
   UsersRouteRoute: typeof UsersRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   CampaignsCampaignIdRouteRoute: typeof CampaignsCampaignIdRouteRouteWithChildren
@@ -310,6 +382,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsersRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -330,6 +409,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/campaigns/'
       preLoaderRoute: typeof CampaignsIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/users/me': {
       id: '/users/me'
@@ -380,6 +466,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignsCampaignIdChatRouteImport
       parentRoute: typeof CampaignsCampaignIdRouteRoute
     }
+    '/campaigns/$campaignId/character': {
+      id: '/campaigns/$campaignId/character'
+      path: '/character'
+      fullPath: '/campaigns/$campaignId/character'
+      preLoaderRoute: typeof CampaignsCampaignIdCharacterRouteImport
+      parentRoute: typeof CampaignsCampaignIdRouteRoute
+    }
+    '/admin/$campaignId/quests': {
+      id: '/admin/$campaignId/quests'
+      path: '/$campaignId/quests'
+      fullPath: '/admin/$campaignId/quests'
+      preLoaderRoute: typeof AdminCampaignIdQuestsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/campaigns/$campaignId/quests': {
+      id: '/campaigns/$campaignId/quests'
+      path: '/quests'
+      fullPath: '/campaigns/$campaignId/quests'
+      preLoaderRoute: typeof CampaignsCampaignIdQuestsRouteRouteImport
+      parentRoute: typeof CampaignsCampaignIdRouteRoute
+    }
     '/campaigns/$campaignId/players': {
       id: '/campaigns/$campaignId/players'
       path: '/players'
@@ -407,6 +514,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/campaigns/$campaignId/admin'
       preLoaderRoute: typeof CampaignsCampaignIdAdminRouteRouteImport
       parentRoute: typeof CampaignsCampaignIdRouteRoute
+    }
+    '/campaigns/$campaignId/quests/': {
+      id: '/campaigns/$campaignId/quests/'
+      path: '/'
+      fullPath: '/campaigns/$campaignId/quests/'
+      preLoaderRoute: typeof CampaignsCampaignIdQuestsIndexRouteImport
+      parentRoute: typeof CampaignsCampaignIdQuestsRouteRoute
     }
     '/campaigns/$campaignId/admin/': {
       id: '/campaigns/$campaignId/admin/'
@@ -445,6 +559,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AdminRouteRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminCampaignIdQuestsRoute: typeof AdminCampaignIdQuestsRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+  AdminCampaignIdQuestsRoute: AdminCampaignIdQuestsRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
 
 interface UsersRouteRouteChildren {
   UsersMeRoute: typeof UsersMeRoute
@@ -498,11 +626,27 @@ const CampaignsCampaignIdPlayersRouteRouteWithChildren =
     CampaignsCampaignIdPlayersRouteRouteChildren,
   )
 
+interface CampaignsCampaignIdQuestsRouteRouteChildren {
+  CampaignsCampaignIdQuestsIndexRoute: typeof CampaignsCampaignIdQuestsIndexRoute
+}
+
+const CampaignsCampaignIdQuestsRouteRouteChildren: CampaignsCampaignIdQuestsRouteRouteChildren =
+  {
+    CampaignsCampaignIdQuestsIndexRoute: CampaignsCampaignIdQuestsIndexRoute,
+  }
+
+const CampaignsCampaignIdQuestsRouteRouteWithChildren =
+  CampaignsCampaignIdQuestsRouteRoute._addFileChildren(
+    CampaignsCampaignIdQuestsRouteRouteChildren,
+  )
+
 interface CampaignsCampaignIdRouteRouteChildren {
   CampaignsCampaignIdAdminRouteRoute: typeof CampaignsCampaignIdAdminRouteRouteWithChildren
   CampaignsCampaignIdJournalRouteRoute: typeof CampaignsCampaignIdJournalRouteRoute
   CampaignsCampaignIdPlayRouteRoute: typeof CampaignsCampaignIdPlayRouteRoute
   CampaignsCampaignIdPlayersRouteRoute: typeof CampaignsCampaignIdPlayersRouteRouteWithChildren
+  CampaignsCampaignIdQuestsRouteRoute: typeof CampaignsCampaignIdQuestsRouteRouteWithChildren
+  CampaignsCampaignIdCharacterRoute: typeof CampaignsCampaignIdCharacterRoute
   CampaignsCampaignIdChatRoute: typeof CampaignsCampaignIdChatRoute
   CampaignsCampaignIdLoginRoute: typeof CampaignsCampaignIdLoginRoute
   CampaignsCampaignIdIndexRoute: typeof CampaignsCampaignIdIndexRoute
@@ -516,6 +660,9 @@ const CampaignsCampaignIdRouteRouteChildren: CampaignsCampaignIdRouteRouteChildr
     CampaignsCampaignIdPlayRouteRoute: CampaignsCampaignIdPlayRouteRoute,
     CampaignsCampaignIdPlayersRouteRoute:
       CampaignsCampaignIdPlayersRouteRouteWithChildren,
+    CampaignsCampaignIdQuestsRouteRoute:
+      CampaignsCampaignIdQuestsRouteRouteWithChildren,
+    CampaignsCampaignIdCharacterRoute: CampaignsCampaignIdCharacterRoute,
     CampaignsCampaignIdChatRoute: CampaignsCampaignIdChatRoute,
     CampaignsCampaignIdLoginRoute: CampaignsCampaignIdLoginRoute,
     CampaignsCampaignIdIndexRoute: CampaignsCampaignIdIndexRoute,
@@ -528,6 +675,7 @@ const CampaignsCampaignIdRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   UsersRouteRoute: UsersRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   CampaignsCampaignIdRouteRoute: CampaignsCampaignIdRouteRouteWithChildren,

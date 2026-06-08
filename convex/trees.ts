@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import type { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
+import { createEntityRoom } from "./lib/rooms";
 
 export const getTrees = query({
 	args: { campaignId: v.id("campaigns") },
@@ -81,10 +82,10 @@ export const createTree = mutation({
 		campaignId: v.id("campaigns"),
 	},
 	handler: async (ctx, args) => {
-		const roomId = await ctx.db.insert("rooms", {
+		const roomId = await createEntityRoom(ctx, {
 			entityType: "tree",
 			campaignId: args.campaignId,
-		})
+		});
 
 		const treeId = await ctx.db.insert("decisionTrees", {
 			name: args.name,

@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { createEntityRoom } from "./lib/rooms";
 
 const roomEntityType = v.union(v.literal("campaign"), v.literal("decisionNode"), v.literal("tree"));
 
@@ -76,7 +77,7 @@ export const createRoom = mutation({
 		const campaign = await ctx.db.get(args.campaignId);
 		if (!campaign) throw new Error("Campaign not found.");
 
-		return await ctx.db.insert("rooms", {
+		return await createEntityRoom(ctx, {
 			entityType: args.entityType,
 			campaignId: args.campaignId,
 		});

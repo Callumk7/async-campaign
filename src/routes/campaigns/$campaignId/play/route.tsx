@@ -7,6 +7,7 @@ import {
 import { createFileRoute } from "@tanstack/react-router";
 import * as React from "react";
 import { Authenticated } from "~/components/auth/autheticated";
+import { ChatInterface } from "~/components/chat/chat-interface";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -32,7 +33,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import { api } from "../../../../../convex/_generated/api";
 import type { Doc, Id } from "../../../../../convex/_generated/dataModel";
-import { ChatInterface } from "~/components/chat/chat-interface";
 
 export const Route = createFileRoute("/campaigns/$campaignId/play")({
 	component: RouteComponent,
@@ -354,6 +354,38 @@ function PlayTreePanel({
 			</section>
 
 			<aside className="flex flex-col gap-4">
+				<Card>
+					<CardHeader>
+						<CardTitle>Character</CardTitle>
+						<CardDescription>
+							Choose which character is making decisions.
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<NativeSelect
+							className="w-full"
+							disabled={characters.length === 0}
+							onChange={(event) =>
+								setSelectedCharacterId(
+									event.target.value as Id<"characters"> | "",
+								)
+							}
+							value={selectedCharacterId}
+						>
+							{characters.length === 0 ? (
+								<NativeSelectOption value="">
+									No characters available
+								</NativeSelectOption>
+							) : null}
+							{characters.map((character) => (
+								<NativeSelectOption key={character._id} value={character._id}>
+									{character.name}
+								</NativeSelectOption>
+							))}
+						</NativeSelect>
+					</CardContent>
+				</Card>
+
 				<Card>
 					<CardHeader>
 						<CardTitle>Player intent</CardTitle>

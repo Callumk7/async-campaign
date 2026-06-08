@@ -12,6 +12,7 @@ export const decisionNodesSchema = defineTable({
 	name: v.string(),
 	content: v.string(),
 	campaignId: v.id("campaigns"),
+	questId: v.id("quests"),
 	roomId: v.id("rooms"),
 	parentDecisionNodeId: v.optional(v.id("decisionNodes")),
 	decisionTreeId: v.optional(v.id("decisionTrees")),
@@ -20,7 +21,10 @@ export const decisionNodesSchema = defineTable({
 	updatedAt: v.optional(v.number()),
 })
 	.index("by_campaignId", ["campaignId"])
-	.index("by_campaignId_and_parentDecisionNodeId", ["campaignId", "parentDecisionNodeId"])
+	.index("by_campaignId_and_parentDecisionNodeId", [
+		"campaignId",
+		"parentDecisionNodeId",
+	])
 	.index("by_campaignId_and_status", ["campaignId", "status"])
 	.index("by_decisionTreeId", ["decisionTreeId"])
 	.index("by_campaignId_and_decisionTreeId", ["campaignId", "decisionTreeId"]);
@@ -51,7 +55,10 @@ export const decisionOptionAvailabilitiesSchema = defineTable({
 })
 	.index("by_decisionOptionId", ["decisionOptionId"])
 	.index("by_characterId", ["characterId"])
-	.index("by_decisionOptionId_and_characterId", ["decisionOptionId", "characterId"])
+	.index("by_decisionOptionId_and_characterId", [
+		"decisionOptionId",
+		"characterId",
+	])
 	.index("by_decisionNodeId_and_characterId", ["decisionNodeId", "characterId"])
 	.index("by_campaignId_and_characterId", ["campaignId", "characterId"]);
 
@@ -69,7 +76,10 @@ export const decisionOptionSelectionsSchema = defineTable({
 	.index("by_decisionOptionId", ["decisionOptionId"])
 	.index("by_characterId", ["characterId"])
 	.index("by_decisionNodeId", ["decisionNodeId"])
-	.index("by_decisionOptionId_and_characterId", ["decisionOptionId", "characterId"])
+	.index("by_decisionOptionId_and_characterId", [
+		"decisionOptionId",
+		"characterId",
+	])
 	.index("by_decisionNodeId_and_characterId", ["decisionNodeId", "characterId"])
 	.index("by_decisionNodeId_and_status", ["decisionNodeId", "status"])
 	.index("by_campaignId_and_characterId", ["campaignId", "characterId"]);
