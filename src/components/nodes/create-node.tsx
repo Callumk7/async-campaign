@@ -20,7 +20,9 @@ export function CreateNode({ campaignId }: CreateNodeProps) {
 		mutationFn: useConvexMutation(api.decisionNodes.createDecisionNode),
 	});
 
-	const handleCreateNode = async (event: React.FormEvent<HTMLFormElement>) => {
+	const handleCreateNode = async (
+		event: React.SubmitEvent<HTMLFormElement>,
+	) => {
 		event.preventDefault();
 		await createNodeMutation.mutateAsync({
 			name,
